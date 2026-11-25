@@ -1,0 +1,38 @@
+/* Jembatan token Gaine -> variabel tema default VitePress (--vp-*).
+   Butuh preset Tailwind Gaine (`@tailwind base`) karena token (--background, --brand, ...)
+   dibuat olehnya. Selector sengaja `:root:root` / `:root.dark` agar menang atas
+   `:root` / `.dark` milik VitePress tanpa peduli urutan impor. */
+:root:root,
+:root.dark {
+  --vp-c-bg: hsl(var(--background));
+  --vp-c-bg-alt: hsl(var(--secondary));
+  --vp-c-bg-elv: hsl(var(--popover));
+  --vp-c-bg-soft: hsl(var(--muted));
+
+  --vp-c-border: hsl(var(--border));
+  --vp-c-divider: hsl(var(--border));
+  --vp-c-gutter: hsl(var(--border));
+
+  --vp-c-text-1: hsl(var(--foreground));
+  --vp-c-text-2: hsl(var(--muted-foreground));
+  --vp-c-text-3: hsl(var(--muted-foreground) / 0.75);
+
+  --vp-c-default-1: hsl(var(--border));
+  --vp-c-default-2: hsl(var(--accent));
+  --vp-c-default-3: hsl(var(--muted-foreground) / 0.6);
+  --vp-c-default-soft: hsl(var(--accent));
+
+  --vp-c-brand-1: hsl(var(--brand));
+  --vp-c-brand-2: hsl(var(--brand) / 0.85);
+  --vp-c-brand-3: hsl(var(--brand) / 0.7);
+  --vp-c-brand-soft: hsl(var(--brand) / 0.14);
+
+  --vp-button-brand-bg: hsl(var(--brand));
+  --vp-button-brand-hover-bg: hsl(var(--brand) / 0.85);
+  --vp-button-brand-active-bg: hsl(var(--brand) / 0.7);
+  --vp-button-brand-text: hsl(var(--brand-foreground));
+  --vp-button-brand-hover-text: hsl(var(--brand-foreground));
+  --vp-button-brand-active-text: hsl(var(--brand-foreground));
+
+  --vp-font-family-base: var(--font-sans, system-ui), system-ui, sans-serif;
+}
