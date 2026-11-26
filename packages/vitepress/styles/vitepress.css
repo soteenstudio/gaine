@@ -1,7 +1,7 @@
-/* Jembatan token Gaine -> variabel tema default VitePress (--vp-*).
-   Butuh preset Tailwind Gaine (`@tailwind base`) karena token (--background, --brand, ...)
-   dibuat olehnya. Selector sengaja `:root:root` / `:root.dark` agar menang atas
-   `:root` / `.dark` milik VitePress tanpa peduli urutan impor. */
+/* Bridge from Gaine tokens to the default VitePress theme variables (--vp-*).
+   Requires the Gaine Tailwind preset (`@tailwind base`) because it creates the tokens
+   (--background, --brand, ...). The selectors are deliberately `:root:root` / `:root.dark`
+   so they beat VitePress's own `:root` / `.dark` regardless of import order. */
 :root:root,
 :root.dark {
   --vp-c-bg: hsl(var(--background));

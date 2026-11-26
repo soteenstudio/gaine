@@ -10,7 +10,7 @@ hero:
       link: /id/guide/
 features:
   - title: Dark mode tanpa kedipan
-    details: themeInitScript dipasang di head, ThemeSync menjaga tema saat pindah halaman.
+    details: themeInitScript dipasang di head, runtime inline Gaine menjaga tema saat pindah halaman.
   - title: Redirect bahasa
     details: Halaman root diarahkan ke bahasa browser lewat gaineHead.
   - title: Robots dan sitemap

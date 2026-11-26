@@ -1,13 +1,6 @@
 import { notFound } from "next/navigation";
-import {
-  Badge,
-  Button,
-  LanguageSwitcher,
-  Logo,
-  SectionHeading,
-  ThemeToggle,
-  reveal,
-} from "@gaine/nextjs";
+import { Badge, Button, Logo, SectionHeading, reveal } from "@gaine/nextjs";
+import { LanguageSwitcherLite, ThemeToggleLite } from "@gaine/nextjs/speed";
 import { isLocale, localeLabels, locales } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import { siteName } from "@/site.config";
@@ -23,13 +16,13 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
         <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-6">
           <Logo href={`/${locale}`} label={t.homeLabel} mark={siteName.charAt(0).toUpperCase()} primary={siteName} />
           <div className="flex items-center gap-2">
-            <LanguageSwitcher
+            <LanguageSwitcherLite
               locale={locale}
               label={t.languageLabel}
               locales={locales}
               localeLabels={localeLabels}
             />
-            <ThemeToggle label={t.themeLabel} />
+            <ThemeToggleLite label={t.themeLabel} />
           </div>
         </div>
       </header>

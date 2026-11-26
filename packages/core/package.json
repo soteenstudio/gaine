@@ -1,8 +1,8 @@
 {
   "name": "@gaine/core",
-  "version": "0.1.0",
-  "description": "Gaine core: design tokens (preset Tailwind), tema, i18n, reveal-on-scroll, dan cn. Tanpa React/Next/Vue; dipakai @gaine/nextjs dan @gaine/vitepress.",
-  "license": "MIT",
+  "version": "0.2.0",
+  "description": "Gaine core: design tokens (Tailwind preset), theme, i18n, reveal-on-scroll, and cn. No React/Next/Vue; used by @gaine/nextjs and @gaine/vitepress.",
+  "license": "Apache-2.0",
   "type": "module",
   "sideEffects": [
     "**/*.css"
@@ -23,12 +23,25 @@
       "default": "./dist/tailwind/index.js"
     },
     "./reveal.css": "./styles/reveal.css",
+    "./speed": {
+      "types": "./dist/speed/index.d.ts",
+      "import": "./dist/speed/index.js",
+      "default": "./dist/speed/index.js"
+    },
+    "./speed/node": {
+      "types": "./dist/speed/node.d.ts",
+      "import": "./dist/speed/node.js",
+      "default": "./dist/speed/node.js"
+    },
+    "./speed.css": "./styles/speed.css",
+    "./view-transition.css": "./styles/view-transition.css",
     "./package.json": "./package.json"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\""
+    "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\"",
+    "test": "node --test"
   },
   "dependencies": {
     "clsx": "^2.1.1",
@@ -40,7 +53,8 @@
   },
   "devDependencies": {
     "tailwindcss": "^3.4.17",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.2",
+    "@types/node": "^22.10.0"
   },
   "peerDependenciesMeta": {
     "tailwindcss": {

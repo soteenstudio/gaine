@@ -18,18 +18,18 @@ const LANGS: readonly { value: Lang; label: string; hint?: string }[] = [
 ];
 
 const HELP = `
-${color.bold("gaine")}: scaffold proyek Gaine
+${color.bold("gaine")}: scaffold a Gaine project
 
-${color.bold("Pemakaian")}
-  npx gaine@latest [nama-proyek] [opsi]
+${color.bold("Usage")}
+  npx gaine@latest [project-name] [options]
 
-${color.bold("Opsi")}
+${color.bold("Options")}
   -f, --framework <next|vitepress>   framework
-  -l, --lang <ts|js>                 bahasa
-  -h, --help                         bantuan
-  -v, --version                      versi
+  -l, --lang <ts|js>                 language
+  -h, --help                         show help
+  -v, --version                      show version
 
-Tanpa opsi, menu interaktif akan muncul. Pakai "." sebagai nama untuk folder saat ini.
+Without options, an interactive menu is shown. Use "." as the name for the current folder.
 `;
 
 const pkgRoot = resolve(fileURLToPath(import.meta.url), "../..");
@@ -44,9 +44,9 @@ function parseArgs(args: string[]) {
     else if (a === "-v" || a === "--version") out.version = true;
     else if (flag === "-f" || flag === "--framework") out.framework = value();
     else if (flag === "-l" || flag === "--lang" || flag === "--language") out.lang = value();
-    else if (a.startsWith("-")) fail(`Opsi tidak dikenal: ${a}`);
+    else if (a.startsWith("-")) fail(`Unknown option: ${a}`);
     else if (!out.dir) out.dir = a;
-    else fail(`Argumen berlebih: ${a}`);
+    else fail(`Unexpected argument: ${a}`);
   }
   return out;
 }
@@ -58,13 +58,13 @@ function fail(message: string): never {
 
 const NAME_RE = /^(?:@[a-z0-9-*~][a-z0-9-*._~]*\/)?[a-z0-9-~][a-z0-9-._~]*$/;
 const validateName = (v: string) =>
-  v === "." || NAME_RE.test(v) ? undefined : "Nama harus huruf kecil, angka, atau tanda - . _ (valid sebagai nama package npm).";
+  v === "." || NAME_RE.test(v) ? undefined : "Name must be lowercase letters, digits, or - . _ (a valid npm package name).";
 
 function isEmptyDir(dir: string) {
   return !existsSync(dir) || readdirSync(dir).every((f) => f === ".git");
 }
 
-/** Salin template. `_gitignore` -> `.gitignore` (npm membuang .gitignore saat publish). */
+/** Copy a template. `_gitignore` -> `.gitignore` (npm drops .gitignore when publishing). */
 function copyDir(from: string, to: string, vars: Record<string, string>, written: string[]) {
   mkdirSync(to, { recursive: true });
   for (const entry of readdirSync(from)) {
@@ -101,29 +101,29 @@ async function main() {
   }
 
   if (args.framework && !FRAMEWORKS.some((f) => f.value === args.framework)) {
-    fail(`Framework tidak valid: ${args.framework} (pilih next atau vitepress)`);
+    fail(`Invalid framework: ${args.framework} (choose next or vitepress)`);
   }
   if (args.lang && !LANGS.some((l) => l.value === args.lang)) {
-    fail(`Bahasa tidak valid: ${args.lang} (pilih ts atau js)`);
+    fail(`Invalid language: ${args.lang} (choose ts or js)`);
   }
   const interactive = Boolean(stdin.isTTY);
   if (!interactive && !(args.dir && args.framework && args.lang)) {
-    fail("Terminal tidak interaktif: isi nama proyek, --framework, dan --lang.");
+    fail("Terminal is not interactive: provide a project name, --framework, and --lang.");
   }
 
-  console.log(`\n${color.bold(color.cyan("gaine"))} ${color.dim("· scaffold proyek")}\n`);
+  console.log(`\n${color.bold(color.cyan("gaine"))} ${color.dim("· project scaffolder")}\n`);
 
-  const target = args.dir ?? (await text("Nama proyek?", "gaine-app", validateName));
-  const framework = (args.framework as Framework) ?? (await select("Pilih framework", FRAMEWORKS));
-  const lang = (args.lang as Lang) ?? (await select("Pilih bahasa", LANGS));
+  const target = args.dir ?? (await text("Project name?", "gaine-app", validateName));
+  const framework = (args.framework as Framework) ?? (await select("Pick a framework", FRAMEWORKS));
+  const lang = (args.lang as Lang) ?? (await select("Pick a language", LANGS));
 
   const dir = resolve(cwd(), target);
   const name = basename(dir).toLowerCase();
-  if (validateName(name)) fail(`Nama folder "${basename(dir)}" tidak valid sebagai nama package.`);
-  if (!isEmptyDir(dir)) fail(`Folder ${relative(cwd(), dir) || "."} tidak kosong.`);
+  if (validateName(name)) fail(`Folder name "${basename(dir)}" is not a valid package name.`);
+  if (!isEmptyDir(dir)) fail(`Folder ${relative(cwd(), dir) || "."} is not empty.`);
 
   const template = join(pkgRoot, "templates", `${framework}-${lang}`);
-  if (!existsSync(template)) fail(`Template tidak ditemukan: ${framework}-${lang}`);
+  if (!existsSync(template)) fail(`Template not found: ${framework}-${lang}`);
 
   const written: string[] = [];
   copyDir(template, dir, { name }, written);
@@ -131,8 +131,8 @@ async function main() {
   const pm = packageManager();
   const rel = relative(cwd(), dir);
   const run = pm === "npm" ? "npm run" : pm;
-  console.log(`\n${color.green("✔")} Proyek dibuat di ${color.bold(rel || ".")} (${written.length} file)\n`);
-  console.log("Langkah berikutnya:\n");
+  console.log(`\n${color.green("✔")} Project created in ${color.bold(rel || ".")} (${written.length} files)\n`);
+  console.log("Next steps:\n");
   if (rel) console.log(`  cd ${rel}`);
   console.log(`  ${pm} install`);
   console.log(`  ${run} dev\n`);
@@ -140,7 +140,7 @@ async function main() {
 
 main().catch((err) => {
   if (err instanceof Cancelled) {
-    console.log(`${color.red("✖")} Dibatalkan`);
+    console.log(`${color.red("✖")} Cancelled`);
     exit(130);
   }
   console.error(err);

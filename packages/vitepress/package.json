@@ -1,8 +1,8 @@
 {
   "name": "@gaine/vitepress",
-  "version": "0.1.0",
-  "description": "Gaine untuk VitePress (Vue 3): ThemeSync, ScrollReveal, LanguageSwitcher, Logo, ThemeToggle, redirect locale, robots/sitemap, dan OG image.",
-  "license": "MIT",
+  "version": "0.2.0",
+  "description": "Gaine for VitePress (Vue 3): ThemeSync, ScrollReveal, LanguageSwitcher, Logo, ThemeToggle, locale redirect, robots/sitemap, and OG images. Speed layer: withGaineSpeed, MPA mode, inline runtime, speculation rules.",
+  "license": "Apache-2.0",
   "type": "module",
   "sideEffects": [
     "**/*.css"
@@ -37,13 +37,19 @@
       "import": "./dist/og.js",
       "default": "./dist/og.js"
     },
+    "./speed": {
+      "types": "./dist/speed.d.ts",
+      "import": "./dist/speed.js",
+      "default": "./dist/speed.js"
+    },
     "./vitepress.css": "./styles/vitepress.css",
     "./package.json": "./package.json"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\""
+    "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\"",
+    "test": "node --test"
   },
   "dependencies": {
     "@gaine/core": "workspace:^"
@@ -55,8 +61,12 @@
     "vue": "^3.5.0"
   },
   "peerDependenciesMeta": {
-    "@resvg/resvg-js": { "optional": true },
-    "satori": { "optional": true }
+    "@resvg/resvg-js": {
+      "optional": true
+    },
+    "satori": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@resvg/resvg-js": "^2.6.2",

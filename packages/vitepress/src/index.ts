@@ -4,3 +4,4 @@ export { reveal, type RevealVariant } from "./reveal.js";
 export { ThemeToggle } from "./theme-toggle.js";
 export { LanguageSwitcher, type LanguageSwitcherProps } from "./language-switcher.js";
 export { Logo, type LogoProps } from "./logo.js";
+export { ThemeToggleLite, LanguageSwitcherLite } from "./lite.js";

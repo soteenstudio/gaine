@@ -3,7 +3,7 @@ import { useRoute, withBase } from "vitepress";
 import { CheckIcon, GlobeIcon } from "./icons.js";
 
 export interface LanguageSwitcherProps {
-  /** Locale aktif. Default: segmen pertama path jika cocok, selain itu `defaultLocale`. */
+  /** Active locale. Defaults to the first path segment if it matches, otherwise `defaultLocale`. */
   locale?: string;
   label: string;
   locales: readonly string[];
@@ -12,9 +12,9 @@ export interface LanguageSwitcherProps {
 }
 
 /**
- * Dropdown ganti bahasa untuk struktur path `/{locale}/...` (semua locale berprefiks,
- * sama seperti versi Next.js). Item berupa <a> biasa sehingga navigasi SPA VitePress
- * tetap menangani base path dan prefetch.
+ * Language dropdown for the `/{locale}/...` path structure (every locale is prefixed,
+ * same as the Next.js version). Items are plain <a> elements so VitePress SPA navigation
+ * still handles the base path and prefetching.
  */
 export const LanguageSwitcher = defineComponent({
   name: "GaineLanguageSwitcher",
@@ -92,7 +92,7 @@ export const LanguageSwitcher = defineComponent({
                     role: "menuitem",
                     lang: l,
                     href: withBase(pathFor(l)),
-                    // pertahankan #hash saat pindah bahasa (dibaca router VitePress setelah ini)
+                    // keep the #hash when switching language (read by the VitePress router afterwards)
                     onClick: (e: MouseEvent) => {
                       const a = e.currentTarget as HTMLAnchorElement;
                       a.href = withBase(pathFor(l)) + window.location.hash;

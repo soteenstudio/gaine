@@ -3,7 +3,7 @@ import { reveal as coreReveal, type RevealVariant } from "@gaine/core";
 
 export type { RevealVariant };
 
-/** `reveal` dari @gaine/core + `suppressHydrationWarning` (class `is-visible` ditambah sebelum hydrate). */
+/** `reveal` from @gaine/core + `suppressHydrationWarning` (the `is-visible` class is added before hydration). */
 export function reveal(delay = 0, variant: RevealVariant = "up") {
   const { style, ...rest } = coreReveal(delay, variant);
   return {

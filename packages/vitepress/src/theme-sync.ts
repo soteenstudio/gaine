@@ -3,9 +3,9 @@ import { useRoute } from "vitepress";
 import { applyTheme } from "@gaine/core";
 
 /**
- * Menyamakan class `dark` di <html> dengan localStorage/prefers-color-scheme
- * setiap pindah halaman dan saat preferensi OS berubah.
- * Pasangkan dengan `appearance: false` di config VitePress.
+ * Syncs the `dark` class on <html> with localStorage / prefers-color-scheme
+ * on every page navigation and when the OS preference changes.
+ * Use together with `appearance: false` in the VitePress config.
  */
 export function useThemeSync() {
   const route = useRoute();

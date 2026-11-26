@@ -9,8 +9,8 @@
     "preview": "vitepress preview"
   },
   "dependencies": {
-    "@gaine/core": "^0.1.0",
-    "@gaine/vitepress": "^0.1.0"
+    "@gaine/core": "^0.2.0",
+    "@gaine/vitepress": "^0.2.0"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.20",

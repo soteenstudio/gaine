@@ -1,6 +1,6 @@
 # @gaine/core
 
-Inti Gaine yang netral: tanpa React, Next.js, maupun Vue. Dipakai oleh `@gaine/nextjs` dan `@gaine/vitepress`.
+The neutral core of Gaine: no React, Next.js, or Vue. Used by `@gaine/nextjs` and `@gaine/vitepress`.
 
 ```ts
 import {
@@ -11,11 +11,19 @@ import { gainePreset, gaineContent } from "@gaine/core/tailwind";
 import "@gaine/core/reveal.css";
 ```
 
-- `gainePreset()` / `gaineContent`: preset Tailwind (token warna, radius, font, dark mode).
-- `reveal.css`: animasi `[data-reveal]`.
-- `reveal(delay, variant)`: objek `{ "data-reveal", style }` polos (React: pakai `reveal` dari `@gaine/nextjs`; Vue: `v-bind`).
-- `themeInitScript` / `revealInitScript`: string script inline; `applyTheme` / `toggleTheme`: sisi client.
-- `defineLocales`, `detectLocale`: helper i18n.
+- `gainePreset()` / `gaineContent`: Tailwind preset (color tokens, radius, font, dark mode).
+- `reveal.css`: `[data-reveal]` animations.
+- `reveal(delay, variant)`: a plain `{ "data-reveal", style }` object (React: use `reveal` from `@gaine/nextjs`; Vue: `v-bind`).
+- `themeInitScript` / `revealInitScript`: inline script strings; `applyTheme` / `toggleTheme`: client side.
+- `defineLocales`, `detectLocale`: i18n helpers.
 
-Komponen UI (`Button`, `Badge`, `Dropdown*`, `SectionHeading`, `ThemeToggle`) ada di `@gaine/nextjs`.
-Peer dependency: hanya `tailwindcss` ^3.4.17 (opsional, hanya untuk `@gaine/core/tailwind`).
+UI components (`Button`, `Badge`, `Dropdown*`, `SectionHeading`, `ThemeToggle`) live in `@gaine/nextjs`.
+Peer dependency: only `tailwindcss` ^3.4.17 (optional, needed only for `@gaine/core/tailwind`).
+
+## Speed (`@gaine/core/speed`)
+
+Framework-neutral speed logic shared by `@gaine/nextjs` and `@gaine/vitepress`: `gaineRuntimeScript`, `speculationRules`,
+`optimizeHtml`, `resourceHints`, `hintsToHtml`, `hintsToLinkHeader`, `speedHeaders`, `toHeadersFile`, `toNextHeaders`,
+`renderLanguageMenu`, `renderThemeToggle`. Node-only build tooling lives in `@gaine/core/speed/node` (`measureBuild`, `checkBudget`).
+CSS: `@gaine/core/speed.css` (`.gaine-defer`) and `@gaine/core/view-transition.css`. See the root README for usage.
+Tests: `pnpm --filter @gaine/core build && pnpm --filter @gaine/core test`.

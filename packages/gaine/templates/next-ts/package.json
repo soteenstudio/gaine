@@ -8,8 +8,8 @@
     "start": "next start"
   },
   "dependencies": {
-    "@gaine/core": "^0.1.0",
-    "@gaine/nextjs": "^0.1.0",
+    "@gaine/core": "^0.2.0",
+    "@gaine/nextjs": "^0.2.0",
     "lucide-react": "^0.468.0",
     "next": "^16.2.7",
     "react": "^19.2.0",

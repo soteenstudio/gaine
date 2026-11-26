@@ -1,8 +1,8 @@
 /**
- * Padanan `@gaine/nextjs/og`. Next punya `ImageResponse` bawaan; di VitePress layout yang sama
- * dirender lewat `satori` (SVG) + `@resvg/resvg-js` (PNG) dan hasilnya ditulis saat build.
- * Keduanya optional peer dependency dan dimuat dinamis. Font wajib diberikan karena satori
- * tidak membawa font bawaan.
+ * Counterpart of `@gaine/nextjs/og`. Next ships `ImageResponse`; in VitePress the same layout
+ * is rendered through `satori` (SVG) + `@resvg/resvg-js` (PNG) and written at build time.
+ * Both are optional peer dependencies loaded dynamically. Fonts are required because satori
+ * does not ship a default font.
  */
 export const ogSize = { width: 1200, height: 630 };
 export const ogContentType = "image/png";
@@ -38,7 +38,7 @@ const div = (style: Style, ...children: Array<Node | string | null | undefined |
 };
 
 async function toPng(tree: Node, { fonts }: OgRenderOptions): Promise<Uint8Array> {
-  if (fonts.length === 0) throw new Error("@gaine/vitepress/og: minimal satu font wajib diberikan.");
+  if (fonts.length === 0) throw new Error("@gaine/vitepress/og: at least one font is required.");
   const [{ default: satori }, { Resvg }] = await Promise.all([import("satori"), import("@resvg/resvg-js")]);
   const svg = await satori(tree as unknown as Parameters<typeof satori>[0], {
     ...ogSize,

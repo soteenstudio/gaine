@@ -4,16 +4,16 @@ import { themeInitScript } from "@gaine/core";
 export interface LocaleRedirectOptions {
   locales: readonly string[];
   defaultLocale: string;
-  /** Sama dengan `base` di config VitePress. Default `/`. */
+  /** Same as `base` in the VitePress config. Defaults to `/`. */
   base?: string;
-  /** Prefix path yang tidak ikut diarahkan, mis. `["/api/"]`. */
+  /** Path prefixes that are not redirected, e.g. `["/api/"]`. */
   exclude?: readonly string[];
 }
 
 /**
- * Padanan `createLocaleProxy` untuk situs statis: VitePress tidak punya server,
- * jadi redirect dilakukan di browser berdasarkan `navigator.languages`.
- * Path yang belum berprefiks locale diarahkan ke `/{locale}{path}`.
+ * Counterpart of `createLocaleProxy` for static sites: VitePress has no server,
+ * so the redirect happens in the browser based on `navigator.languages`.
+ * Paths without a locale prefix are redirected to `/{locale}{path}`.
  */
 export function localeRedirectScript({
   locales,
@@ -34,15 +34,15 @@ export function localeRedirectScript({
 }
 
 export interface GaineHeadOptions extends Partial<LocaleRedirectOptions> {
-  /** Isi bersama `locales` + `defaultLocale` untuk mengaktifkan redirect locale. */
+  /** Provide together with `defaultLocale` to enable the locale redirect. */
   locales?: readonly string[];
 }
 
 /**
- * Entri `head` untuk config VitePress: `themeInitScript` (class `js` + `dark` sebelum paint)
- * dan, bila `locales`/`defaultLocale` diberikan, redirect locale.
- * Script reveal awal tidak dipakai di sini karena `head` dieksekusi sebelum <body>;
- * `<ScrollReveal />` menanganinya saat mount.
+ * `head` entries for the VitePress config: `themeInitScript` (`js` + `dark` classes before paint)
+ * and, when `locales`/`defaultLocale` are given, the locale redirect.
+ * The initial reveal script is not used here because `head` runs before <body>;
+ * `<ScrollReveal />` handles it on mount.
  */
 export function gaineHead(options: GaineHeadOptions = {}): HeadConfig[] {
   const head: HeadConfig[] = [["script", {}, themeInitScript]];

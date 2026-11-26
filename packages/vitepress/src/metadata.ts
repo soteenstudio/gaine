@@ -2,7 +2,7 @@ import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import type { SiteConfig } from "vitepress";
 
-/** Hanya untuk Node (config/`buildEnd`), jangan diimpor dari kode client. */
+/** Node only (config / `buildEnd`); do not import from client code. */
 
 export function createRobotsTxt(options: { baseUrl: string; disallow?: string[] }): string {
   const lines = ["User-agent: *", "Allow: /"];
@@ -33,7 +33,7 @@ export interface SitemapEntry {
   priority: number;
 }
 
-/** Bentuk entri sama dengan `createSitemap` di @gaine/nextjs. */
+/** Same entry shape as `createSitemap` in @gaine/nextjs. */
 export function createSitemap<L extends string>(options: {
   baseUrl: string;
   locales: readonly L[];
@@ -67,8 +67,8 @@ export function sitemapToXml(entries: readonly SitemapEntry[]): string {
 }
 
 /**
- * Hook `buildEnd` yang menulis `robots.txt` dan `sitemap.xml` ke folder output.
- * Jangan dikombinasikan dengan opsi `sitemap` bawaan VitePress (nama file sama).
+ * `buildEnd` hook that writes `robots.txt` and `sitemap.xml` to the output folder.
+ * Do not combine with VitePress's built-in `sitemap` option (same file name).
  */
 export function createSeoBuildEnd<L extends string>(options: {
   baseUrl: string;

@@ -1,13 +1,13 @@
 # {{name}}
 
-Dibuat dengan `npx gaine@latest` (Next.js + TypeScript).
+Created with `npx gaine@latest` (Next.js + TypeScript).
 
 ```bash
 npm install
 npm run dev
 ```
 
-- `i18n/config.ts`: daftar locale. `proxy.ts` mengarahkan `/` ke locale dari `Accept-Language`.
-- `tailwind.config.ts`: ganti warna brand lewat opsi `gainePreset()`.
-- `app/[locale]/page.tsx`: halaman contoh.
-- Font (`next/font`) sengaja tidak disertakan; pasang di `app/[locale]/layout.tsx` dan set variabel `--font-sans`.
+- `i18n/config.ts`: the list of locales. `proxy.ts` redirects `/` to a locale based on `Accept-Language`.
+- `tailwind.config.ts`: change the brand color through the `gainePreset()` options.
+- `app/[locale]/page.tsx`: example page.
+- Fonts (`next/font`) are intentionally not included; add them in `app/[locale]/layout.tsx` and set the `--font-sans` variable.

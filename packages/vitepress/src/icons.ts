@@ -1,6 +1,6 @@
 import { h, type VNode } from "vue";
 
-/** Ikon lucide (ISC) versi inline, supaya paket ini tidak butuh lib ikon. */
+/** Inline lucide icons (ISC) so this package does not need an icon library. */
 function icon(className: string, children: VNode[]): VNode {
   return h(
     "svg",

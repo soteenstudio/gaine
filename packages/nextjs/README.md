@@ -1,6 +1,6 @@
 # @gaine/nextjs
 
-Lapisan Next.js 16 (App Router) di atas `@gaine/core`.
+The Next.js 16 (App Router) layer on top of `@gaine/core`.
 
 ```ts
 import {
@@ -13,9 +13,16 @@ import { createRobots, createSitemap } from "@gaine/nextjs/metadata";
 import { renderOgCover, renderOgFallback } from "@gaine/nextjs/og";
 ```
 
-- `createLocaleProxy({ locales, defaultLocale })` untuk `proxy.ts` (redirect berdasarkan `Accept-Language`).
-- `LanguageSwitcher` menerima `locales` dan `localeLabels` lewat props.
-- `Logo` menerima `href`, `label`, `mark`, `primary`, `secondary?`, `product?`.
-- `export const size`/`contentType`/`alt` di file `opengraph-image.tsx` tetap ditulis literal di aplikasi.
-- Komponen UI (`Button`, `Badge`, `Dropdown*`, `SectionHeading`, `ThemeToggle`) dulunya di `@gaine/core/ui`; kini di sini bersama dependensinya (Radix, cva, lucide-react).
-- `reveal()` membungkus `reveal` dari core dengan `suppressHydrationWarning`.
+- `createLocaleProxy({ locales, defaultLocale })` for `proxy.ts` (redirects based on `Accept-Language`).
+- `LanguageSwitcher` takes `locales` and `localeLabels` as props.
+- `Logo` takes `href`, `label`, `mark`, `primary`, `secondary?`, `product?`.
+- `export const size` / `contentType` / `alt` in an `opengraph-image.tsx` file must still be written as literals in the app.
+- The UI components (`Button`, `Badge`, `Dropdown*`, `SectionHeading`, `ThemeToggle`) used to live in `@gaine/core/ui`; they now live here together with their dependencies (Radix, cva, lucide-react).
+- `reveal()` wraps the core `reveal` with `suppressHydrationWarning`.
+
+## Speed
+
+- `@gaine/nextjs/config`: `withGaineSpeed(config, options)` for `next.config`.
+- `@gaine/nextjs/speed`: server components with no client JS: `GaineRuntime`, `GaineHead`, `ThemeToggleLite`, `LanguageSwitcherLite`.
+
+`ThemeSync` and `ScrollReveal` are no longer needed when `GaineRuntime` is on the page. Details are in the root README.

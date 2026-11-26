@@ -2,4 +2,4 @@
 layout: false
 ---
 
-<!-- Pintu masuk: diarahkan ke /id/ atau /en/ oleh script di head (lihat gaineHead). -->
+<!-- Entry page: redirected to /id/ or /en/ by the script in head (see gaineHead). -->

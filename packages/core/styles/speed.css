@@ -1,0 +1,16 @@
+.gaine-defer {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 640px;
+}
+.gaine-defer-sm {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 320px;
+}
+.gaine-isolate {
+  contain: layout paint;
+}
+img,
+video {
+  max-width: 100%;
+  height: auto;
+}

@@ -1,8 +1,9 @@
 import { notFound } from "next/navigation";
 import "../globals.css";
 import "@gaine/core/reveal.css";
+import "@gaine/core/speed.css";
 import { themeInitScript } from "@gaine/core";
-import { ScrollReveal, ThemeSync } from "@gaine/nextjs";
+import { GaineRuntime } from "@gaine/nextjs/speed";
 import { isLocale, locales } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import { siteName } from "@/site.config";
@@ -29,8 +30,7 @@ export default async function RootLayout({ children, params }) {
       </head>
       <body>
         {children}
-        <ThemeSync />
-        <ScrollReveal />
+        <GaineRuntime menu locales={locales} />
       </body>
     </html>
   );

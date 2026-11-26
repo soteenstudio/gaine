@@ -1,7 +1,7 @@
 import { defineComponent, nextTick, onBeforeUnmount, onMounted, watch } from "vue";
 import { useRoute } from "vitepress";
 
-/** Mengamati elemen `[data-reveal]` (lihat `reveal()`), dijalankan ulang tiap pindah halaman. */
+/** Observes `[data-reveal]` elements (see `reveal()`), re-run on every page navigation. */
 export function useScrollReveal() {
   const route = useRoute();
   let observer: IntersectionObserver | undefined;

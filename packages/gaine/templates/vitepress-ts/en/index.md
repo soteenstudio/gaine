@@ -10,7 +10,7 @@ hero:
       link: /en/guide/
 features:
   - title: Flash-free dark mode
-    details: themeInitScript runs in head and ThemeSync keeps the theme across navigation.
+    details: themeInitScript runs in head and the inline Gaine runtime keeps the theme across navigation.
   - title: Locale redirect
     details: The root page is redirected to the browser language through gaineHead.
   - title: Robots and sitemap

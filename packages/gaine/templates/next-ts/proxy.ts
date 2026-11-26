@@ -3,4 +3,4 @@ import { defaultLocale, locales } from "@/i18n/config";
 
 export default createLocaleProxy({ locales, defaultLocale });
 
-export const config = { matcher: ["/((?!_next|api|.*\\..*).*)"] }; // harus literal
+export const config = { matcher: ["/((?!_next|api|.*\\..*).*)"] }; // must be a literal

@@ -1,14 +1,15 @@
 import { defineConfig } from "vitepress";
 import { gaineHead } from "@gaine/vitepress/head";
+import { withGaineSpeed } from "@gaine/vitepress/speed";
 import { createSeoBuildEnd } from "@gaine/vitepress/metadata";
 import { defaultLocale, locales } from "./i18n";
 
 const baseUrl = process.env.SITE_URL ?? "http://localhost:5173";
 
-export default defineConfig({
+const config = defineConfig({
   title: "{{name}}",
   cleanUrls: true,
-  appearance: false, // tema dikelola Gaine (ThemeSync + themeInitScript)
+  appearance: false, // theming is managed by Gaine (themeInitScript + inline runtime)
   head: gaineHead({ locales, defaultLocale }),
   buildEnd: createSeoBuildEnd({
     baseUrl,
@@ -19,7 +20,7 @@ export default defineConfig({
     ],
   }),
   locales: {
-    // `root` hanya halaman pintu masuk (index.md); script head mengarahkannya ke /id/ atau /en/.
+    // `root` is only the entry page (index.md); the head script redirects it to /id/ or /en/.
     root: { label: "Bahasa Indonesia", lang: "id" },
     id: {
       label: "Bahasa Indonesia",
@@ -37,3 +38,7 @@ export default defineConfig({
     },
   },
 });
+
+// Speed layer: inline runtime (theme, reveal, menu), metaChunk, lazy images, `_headers` with immutable caching.
+// Zero-JS mode for content / marketing sites with a custom layout: withGaineSpeed(config, { mode: "mpa", locales })
+export default withGaineSpeed(config, { locales });

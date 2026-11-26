@@ -1,8 +1,8 @@
 export type RevealVariant = "up" | "left" | "right" | "scale" | "fade";
 
 /**
- * Atribut `data-reveal` + delay, berupa objek polos tanpa tipe framework.
- * React: lihat `reveal` di @gaine/nextjs (menambah suppressHydrationWarning).
+ * `data-reveal` attribute + delay as a plain object, with no framework types.
+ * React: see `reveal` in @gaine/nextjs (adds suppressHydrationWarning).
  * Vue: `v-bind="reveal(120)"`.
  */
 export function reveal(delay = 0, variant: RevealVariant = "up") {

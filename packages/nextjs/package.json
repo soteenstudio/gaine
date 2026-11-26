@@ -1,8 +1,8 @@
 {
   "name": "@gaine/nextjs",
-  "version": "0.1.0",
-  "description": "Gaine untuk Next.js 16 (App Router): komponen UI (Button, Badge, Dropdown, SectionHeading, ThemeToggle), proxy locale, ThemeSync, ScrollReveal, LanguageSwitcher, Logo, robots/sitemap, dan OG image.",
-  "license": "MIT",
+  "version": "0.2.0",
+  "description": "Gaine for Next.js 16 (App Router): UI components (Button, Badge, Dropdown, SectionHeading, ThemeToggle), locale proxy, ThemeSync, ScrollReveal, LanguageSwitcher, Logo, robots/sitemap, and OG images.",
+  "license": "Apache-2.0",
   "type": "module",
   "sideEffects": false,
   "files": [
@@ -29,12 +29,23 @@
       "import": "./dist/og.js",
       "default": "./dist/og.js"
     },
+    "./config": {
+      "types": "./dist/config.d.ts",
+      "import": "./dist/config.js",
+      "default": "./dist/config.js"
+    },
+    "./speed": {
+      "types": "./dist/speed.d.ts",
+      "import": "./dist/speed.js",
+      "default": "./dist/speed.js"
+    },
     "./package.json": "./package.json"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\""
+    "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\"",
+    "test": "node --test"
   },
   "dependencies": {
     "@gaine/core": "workspace:^",

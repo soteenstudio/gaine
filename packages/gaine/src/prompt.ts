@@ -19,7 +19,7 @@ export interface Choice<T extends string> {
   hint?: string;
 }
 
-/** Menu pilihan dengan panah atas/bawah + Enter (juga j/k, angka 1-9). Ctrl+C / Esc membatalkan. */
+/** Choice menu with up/down arrows + Enter (also j/k, digits 1-9). Ctrl+C / Esc cancels. */
 export function select<T extends string>(message: string, choices: readonly Choice<T>[]): Promise<T> {
   return new Promise((resolve, reject) => {
     let index = 0;
@@ -82,7 +82,7 @@ export function select<T extends string>(message: string, choices: readonly Choi
   });
 }
 
-/** Input teks satu baris dengan nilai default; diulang sampai `validate` lolos. */
+/** Single-line text input with a default value; repeats until `validate` passes. */
 export async function text(
   message: string,
   initial: string,

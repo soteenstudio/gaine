@@ -1,33 +1,33 @@
 # gaine
 
-Scaffold proyek Gaine.
+Scaffold a Gaine project.
 
 ```bash
 npx gaine@latest
 ```
 
-Menu interaktif (panah atas/bawah atau `j`/`k`, Enter; angka 1-9 memilih langsung):
+Interactive menu (up/down arrows or `j`/`k`, Enter; digits 1-9 pick directly):
 
-1. Nama proyek (`.` untuk folder saat ini)
-2. Framework: **Next.js** atau **VitePress**
-3. Bahasa: **TypeScript** atau **JavaScript**
+1. Project name (`.` for the current folder)
+2. Framework: **Next.js** or **VitePress**
+3. Language: **TypeScript** or **JavaScript**
 
-Tanpa menu:
+Without the menu:
 
 ```bash
 npx gaine@latest my-app --framework next --lang ts
 npx gaine@latest my-docs -f vitepress -l js
 ```
 
-| Template | Isi |
+| Template | Contents |
 | --- | --- |
-| `next-ts`, `next-js` | Next 16 App Router, `@gaine/core` + `@gaine/nextjs`, i18n (`id`/`en`), `proxy.ts`, robots, sitemap, halaman contoh |
-| `vitepress-ts`, `vitepress-js` | VitePress 1.x, `@gaine/core` + `@gaine/vitepress`, i18n (`id`/`en`), switcher bahasa + toggle tema di navbar, robots/sitemap saat build |
+| `next-ts`, `next-js` | Next 16 App Router, `@gaine/core` + `@gaine/nextjs`, i18n (`id`/`en`), `proxy.ts`, robots, sitemap, an example page |
+| `vitepress-ts`, `vitepress-js` | VitePress 1.x, `@gaine/core` + `@gaine/vitepress`, i18n (`id`/`en`), a language switcher + theme toggle in the navbar, robots/sitemap at build time |
 
-Tidak ada dependensi runtime; menu ditulis dengan `readline` bawaan Node. Template ada di `templates/` dan disalin apa adanya
-(`_gitignore` diganti nama menjadi `.gitignore`, `{{name}}` diganti nama proyek).
+No runtime dependencies; the menu is written with Node's built-in `readline`. Templates live in `templates/` and are copied
+as-is (`_gitignore` is renamed to `.gitignore`, `{{name}}` is replaced with the project name).
 
-## Rilis
+## Releasing
 
-Publish urut: `@gaine/core`, lalu `@gaine/nextjs` dan `@gaine/vitepress`, terakhir `gaine`
-(template mengacu ke `^0.1.0` ketiganya). `pnpm -r build` lalu `pnpm publish --access public` per package.
+Publish in this order: `@gaine/core`, then `@gaine/nextjs` and `@gaine/vitepress`, and finally `gaine`
+(the templates reference `^0.1.0` of all three). Run `pnpm -r build`, then `pnpm publish --access public` per package.
