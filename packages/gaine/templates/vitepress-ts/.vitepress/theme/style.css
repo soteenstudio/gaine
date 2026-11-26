@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import "@gaine/core/reveal.css";
+@import "@gaine/vitepress/vitepress.css"; /* token Gaine -> variabel --vp-* */
+
+/* LanguageSwitcher Gaine menggantikan menu bahasa bawaan. */
+.VPNavBarTranslations,
+.VPNavScreenTranslations {
+  display: none;
+}

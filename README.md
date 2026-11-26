@@ -8,6 +8,14 @@ Lib UI/tema/i18n mandiri untuk situs berbasis **Next.js 16** atau **VitePress** 
 | `@gaine/core` | Netral (tanpa framework): preset Tailwind (token warna, radius, font, dark mode), `reveal.css`, `cn`, `reveal()`, `themeInitScript`, `revealInitScript`, `applyTheme`, `toggleTheme`, `defineLocales`, `detectLocale` | Tidak |
 | `@gaine/nextjs` | UI (`Button`, `Badge`, `Dropdown*`, `SectionHeading`, `ThemeToggle`), `reveal`, `ThemeSync`, `ScrollReveal`, `LanguageSwitcher`, `Logo`, `createLocaleProxy`, `createRobots`, `createSitemap`, `renderOgCover`, `renderOgFallback` | Ya (`next` ^16) |
 | `@gaine/vitepress` | Padanan `@gaine/nextjs` untuk VitePress/Vue 3: `ThemeSync`, `ScrollReveal`, `LanguageSwitcher`, `Logo`, `ThemeToggle`, `gaineTheme`, `gaineHead`, `createSeoBuildEnd`, `renderOgCover`. Lihat [packages/vitepress](packages/vitepress/README.md) | Tidak (`vitepress` >=1.5, `vue` ^3.5) |
+| `gaine` | CLI scaffold, menu interaktif ala Vite (Next.js / VitePress, TypeScript / JavaScript). Lihat [packages/gaine](packages/gaine/README.md) | Tidak |
+
+## Memulai proyek baru
+
+```bash
+npx gaine@latest              # menu interaktif
+npx gaine@latest my-app -f next -l ts   # tanpa menu (next|vitepress, ts|js)
+```
 
 ## Pengembangan
 
