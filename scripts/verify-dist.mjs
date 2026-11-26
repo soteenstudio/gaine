@@ -44,7 +44,7 @@ function targets(value) {
   return Object.values(value ?? {}).flatMap(targets);
 }
 
-for (const name of ["core", "nextjs", "vitepress", "gaine"]) {
+for (const name of ["core", "nextjs", "vitepress", "create-gaine"]) {
   const dir = join(ROOT, "packages", name);
   const pkg = JSON.parse(readFileSync(join(dir, "package.json"), "utf8"));
   const wanted = new Set([...targets(pkg.exports), ...targets(pkg.bin)]);
