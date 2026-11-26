@@ -1,5 +1,5 @@
 {
-  "name": "gaine",
+  "name": "create-gaine",
   "version": "0.0.0",
   "description": "Scaffold a Gaine project for Next.js or VitePress and TypeScript or JavaScript",
   "license": "Apache-2.0",
