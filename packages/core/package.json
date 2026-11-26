@@ -1,7 +1,7 @@
 {
   "name": "@gaine/core",
   "version": "0.1.0",
-  "description": "Gaine core: design tokens (Tailwind preset), theme, i18n, reveal-on-scroll, and cn. No React/Next/Vue; used by @gaine/nextjs and @gaine/vitepress.",
+  "description": "Framework-free core for Gaine, with no React or Vue lock-in",
   "license": "Apache-2.0",
   "type": "module",
   "sideEffects": [

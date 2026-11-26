@@ -1,7 +1,7 @@
 {
   "name": "@gaine/nextjs",
   "version": "0.1.0",
-  "description": "Gaine for Next.js 16 (App Router): UI components (Button, Badge, Dropdown, SectionHeading, ThemeToggle), locale proxy, ThemeSync, ScrollReveal, LanguageSwitcher, Logo, robots/sitemap, and OG images.",
+  "description": "Next.js 16 (App Router) integration and UI components for Gaine, built on @gaine/core",
   "license": "Apache-2.0",
   "type": "module",
   "sideEffects": false,
