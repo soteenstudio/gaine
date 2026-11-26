@@ -30,13 +30,13 @@ function walk(dir) {
 }
 
 function looksUnminified(text) {
-  const lines = text
-    .replace(/^\/\/# sourceMappingURL=.*$/gm, "")
+  const code = text.replace(/^\/\/# sourceMappingURL=.*$/gm, "");
+  if (code.length <= 500) return false;
+  const inLongLines = code
     .split("\n")
-    .filter((l) => l.trim());
-  if (lines.length < 10) return false;
-  const codeLike = lines.filter((l) => /[;{}]\s*$/.test(l)).length;
-  return codeLike / lines.length > 0.3;
+    .filter((l) => l.length > 150)
+    .reduce((n, l) => n + l.length, 0);
+  return inLongLines / code.length < 0.4;
 }
 
 function targets(value) {
