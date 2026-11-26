@@ -209,3 +209,25 @@ pnpm install:local ../my-app --no-install                 # only edit package.js
 
 With no library named, it installs `core` plus `nextjs` / `vitepress` depending on whether the project already depends on
 `next` / `vitepress` (otherwise all three).
+
+## Releasing
+
+Every package shares one version (lockstep). Releases are fully automated by `.github/workflows/release.yml`:
+build, test, publish to npm (with provenance) and a GitHub Release with categorized notes
+(Breaking Changes, Features, Bug Fixes, Performance, ..., New Contributors, Full Changelog link).
+
+**One-time setup**
+
+1. Create an npm **Automation** (or granular, publish-enabled) access token and add it as the `NPM_TOKEN` repository secret.
+2. Make sure the `@gaine` scope exists on npm and your account/token can publish to it.
+
+**Release**
+
+- Actions → **Release** → *Run workflow* → `patch`, `minor`, `major` or an explicit version (`1.0.0`, `1.1.0-beta.1`).
+  Tick *Dry run* first to see the notes and `npm publish --dry-run` output without publishing anything.
+- Or bump versions yourself (`node scripts/release.mjs bump minor`), merge, then `git tag vX.Y.Z && git push origin vX.Y.Z`.
+
+Prereleases (`-beta.1`, `-rc.0`, ...) are published under the matching npm dist-tag and marked as pre-release on GitHub.
+
+Release notes are built from [Conventional Commits](https://www.conventionalcommits.org) (`feat(nextjs): ...`, `fix: ...`,
+`feat!: ...` or a `BREAKING CHANGE:` footer). Preview them locally with `node scripts/release.mjs notes vX.Y.Z`.

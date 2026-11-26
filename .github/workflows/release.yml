@@ -1,0 +1,111 @@
+name: Release
+
+# Two ways to release:
+#   1. Actions → Release → Run workflow → choose patch / minor / major / x.y.z
+#      (bumps versions, commits, tags, publishes, creates the GitHub Release)
+#   2. Push a tag yourself: bump versions in a PR, merge, then `git tag vX.Y.Z && git push --tags`
+on:
+  push:
+    tags: ["v[0-9]+.[0-9]+.[0-9]+*"]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "patch | minor | major | explicit (e.g. 1.0.0 or 1.1.0-beta.1)"
+        required: true
+        default: patch
+      dry_run:
+        description: "Dry run (build + npm publish --dry-run, nothing is pushed or published)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # push release commit/tag, create GitHub Release
+      id-token: write # npm provenance
+    env:
+      DRY_RUN: ${{ inputs.dry_run == true }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Ensure release runs from main
+        run: |
+          git fetch origin main
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            [ "${{ github.ref_name }}" = "main" ] || { echo "::error::Run this workflow from main"; exit 1; }
+          else
+            git merge-base --is-ancestor HEAD origin/main || { echo "::error::Tag ${{ github.ref_name }} is not on main"; exit 1; }
+          fi
+
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+
+      - run: pnpm install
+
+      - name: Bump version (manual run)
+        if: github.event_name == 'workflow_dispatch'
+        id: bump
+        run: |
+          VERSION=$(node scripts/release.mjs bump "${{ inputs.version }}")
+          echo "TAG=v$VERSION" >> "$GITHUB_ENV"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -am "chore(release): v$VERSION"
+          git tag -a "v$VERSION" -m "v$VERSION"
+
+      - name: Resolve tag (tag push)
+        if: github.event_name == 'push'
+        run: echo "TAG=${{ github.ref_name }}" >> "$GITHUB_ENV"
+
+      - name: Format check, typecheck, build and test
+        run: |
+          pnpm format:check
+          pnpm typecheck
+          pnpm test
+
+      - name: Verify versions and prepare metadata
+        id: meta
+        run: node scripts/release.mjs prepare "$TAG"
+
+      - name: Generate release notes
+        run: node scripts/release.mjs notes "$TAG" --repo "$GITHUB_REPOSITORY" > RELEASE_NOTES.md
+
+      - name: Publish to npm
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_CONFIG_PROVENANCE: "true"
+        run: |
+          ARGS="--access public --no-git-checks --tag ${{ steps.meta.outputs.dist_tag }}"
+          if [ "$DRY_RUN" = "true" ]; then ARGS="$ARGS --dry-run"; fi
+          pnpm -r publish $ARGS
+
+      - name: Push release commit and tag (manual run)
+        if: github.event_name == 'workflow_dispatch' && inputs.dry_run != true
+        run: git push origin HEAD:main "$TAG"
+
+      - name: Create GitHub Release
+        if: inputs.dry_run != true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          FLAGS=""
+          if [ "${{ steps.meta.outputs.prerelease }}" = "true" ]; then FLAGS="--prerelease"; else FLAGS="--latest"; fi
+          gh release create "$TAG" --title "$TAG" --notes-file RELEASE_NOTES.md --verify-tag $FLAGS
+
+      - name: Show release notes (dry run)
+        if: inputs.dry_run == true
+        run: cat RELEASE_NOTES.md
