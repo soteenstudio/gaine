@@ -5,7 +5,7 @@ Scaffold a Gaine project with zero runtime dependencies (the interactive menu us
 Docs: [https://gaine.soteenstudio.my.id](https://gaine.soteenstudio.my.id)
 
 ```bash
-npx gaine@latest
+npx create-gaine@latest
 ```
 
 It'll ask for:
@@ -17,10 +17,10 @@ It'll ask for:
 Skip the menu with flags:
 
 ```bash
-npx gaine@latest my-app --framework next --lang ts
+npx create-gaine@latest my-app --framework next --lang ts
 
 # or
-npx gaine@latest my-docs -f vitepress -l js
+npx create-gaine@latest my-docs -f vitepress -l js
 ```
 
 ## Templates

@@ -73,7 +73,7 @@ function nextVersion(current, input) {
 }
 
 function templateManifests() {
-  const root = join(PACKAGES_DIR, "gaine", "templates");
+  const root = join(PACKAGES_DIR, "create-gaine", "templates");
   if (!existsSync(root)) return [];
   return readdirSync(root, { withFileTypes: true })
     .filter((e) => e.isDirectory())

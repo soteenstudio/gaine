@@ -1,6 +1,2 @@
 packages:
   - "packages/*"
-overrides:
-  "@gaine/core": file:../.tarball/gaine-core-0.2.0.tgz
-  "@gaine/nextjs": file:../.tarball/gaine-nextjs-0.2.0.tgz
-  "@gaine/vitepress": file:../.tarball/gaine-vitepress-0.2.0.tgz

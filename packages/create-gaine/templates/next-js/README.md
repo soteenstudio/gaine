@@ -1,6 +1,6 @@
 # {{name}}
 
-Created with `npx gaine@latest` (Next.js + JavaScript).
+Created with `npx create-gaine@latest` (Next.js + JavaScript).
 
 ```bash
 npm install

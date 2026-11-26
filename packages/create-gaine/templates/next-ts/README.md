@@ -1,6 +1,6 @@
 # {{name}}
 
-Created with `npx gaine@latest` (Next.js + TypeScript).
+Created with `npx create-gaine@latest` (Next.js + TypeScript).
 
 ```bash
 npm install

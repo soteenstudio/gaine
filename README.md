@@ -9,14 +9,14 @@ Docs: [https://gaine.soteenstudio.my.id](https://gaine.soteenstudio.my.id)
 Scaffold a new project with the CLI:
 
 ```bash
-npx gaine@latest
+npx create-gaine@latest
 ```
 
 ## Packages
 
 | Package | Description |
 | --- | --- |
-| [`gaine`](./packages/gaine) | Zero-dependency CLI to scaffold Next.js or VitePress projects |
+| [`create-gaine`](./packages/create-gaine) | Zero-dependency CLI to scaffold Next.js or VitePress projects |
 | [`@gaine/core`](./packages/core) | Framework-free core (theme, reveal, i18n, Tailwind preset, speed helpers) |
 | [`@gaine/nextjs`](./packages/nextjs) | Next.js 16 (App Router) components, locale proxy, metadata, OG, and speed layer |
 | [`@gaine/vitepress`](./packages/vitepress) | VitePress (Vue 3) theme, components, static SEO, OG, and speed layer |

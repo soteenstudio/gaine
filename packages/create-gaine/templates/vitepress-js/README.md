@@ -1,6 +1,6 @@
 # {{name}}
 
-Created with `npx gaine@latest` (VitePress + JavaScript).
+Created with `npx create-gaine@latest` (VitePress + JavaScript).
 
 ```bash
 npm install

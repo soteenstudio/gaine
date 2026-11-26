@@ -45,7 +45,7 @@ const HELP = `
 ${color.bold("gaine")}: scaffold a Gaine project
 
 ${color.bold("Usage")}
-  npx gaine@latest [project-name] [options]
+  npx create-gaine@latest [project-name] [options]
 
 ${color.bold("Options")}
   -f, --framework <next|vitepress>   framework

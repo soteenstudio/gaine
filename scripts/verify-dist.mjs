@@ -68,11 +68,11 @@ for (const f of client) {
     fail(`@gaine/nextjs: "use client" lost in dist/${f}.js`);
 }
 
-const cli = join(ROOT, "packages/gaine/dist/cli.js");
+const cli = join(ROOT, "packages/create-gaine/dist/cli.js");
 if (existsSync(cli) && !readFileSync(cli, "utf8").startsWith("#!/usr/bin/env node"))
-  fail("gaine: shebang missing in dist/cli.js");
+  fail("create-gaine: shebang missing in dist/cli.js");
 
-for (const name of ["core", "nextjs", "vitepress", "gaine"]) {
+for (const name of ["core", "nextjs", "vitepress", "create-gaine"]) {
   const dist = join(ROOT, "packages", name, "dist");
   if (!existsSync(dist)) continue;
   for (const file of walk(dist).filter((f) => f.endsWith(".js"))) {

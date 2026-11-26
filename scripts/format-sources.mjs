@@ -30,7 +30,7 @@
  * Options:
  *   --check               report files that would change and exit with code 1 (no writes)
  *   --strict              also remove functional comments (@ts-ignore, @type, eslint-*, ...)
- *   --include-templates   also process packages/gaine/templates (scaffolded projects)
+ *   --include-templates   also process packages/create-gaine/templates (scaffolded projects)
  *   --no-header           strip comments and format, but do not add the license header
  *   --holder <name>       copyright holder (default: format.config.json)
  *   --year <year>         copyright year (default: format.config.json, then current year)
@@ -49,7 +49,7 @@ const CSS_EXT = new Set([".css"]);
 const JSON_EXT = new Set([".json"]);
 
 const IGNORED_DIRS = new Set(["node_modules", "dist", ".next", ".git", "coverage", "cache"]);
-const TEMPLATES_DIR = join(ROOT, "packages", "gaine", "templates");
+const TEMPLATES_DIR = join(ROOT, "packages", "create-gaine", "templates");
 
 const KEEP_PATTERNS = [
   /^\/\/\/\s*<(reference|amd-)/,
