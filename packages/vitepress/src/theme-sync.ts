@@ -1,6 +1,6 @@
 import { defineComponent, onBeforeUnmount, onMounted, watch } from "vue";
 import { useRoute } from "vitepress";
-import { applyTheme } from "@gaine/core/theme";
+import { applyTheme } from "@gaine/core";
 
 /**
  * Menyamakan class `dark` di <html> dengan localStorage/prefers-color-scheme

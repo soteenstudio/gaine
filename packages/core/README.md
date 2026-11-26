@@ -1,18 +1,21 @@
 # @gaine/core
 
-Bagian Gaine yang tidak bergantung pada Next.js.
+Inti Gaine yang netral: tanpa React, Next.js, maupun Vue. Dipakai oleh `@gaine/nextjs` dan `@gaine/vitepress`.
 
 ```ts
 import {
-  cn, reveal, revealInitScript, themeInitScript, applyTheme, toggleTheme,
+  cn, reveal, revealInitScript, themeInitScript, applyTheme, toggleTheme, THEME_STORAGE_KEY,
   defineLocales, detectLocale,
-  Button, Badge, DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem,
-  SectionHeading, ThemeToggle,
 } from "@gaine/core";
 import { gainePreset, gaineContent } from "@gaine/core/tailwind";
 import "@gaine/core/reveal.css";
 ```
 
-Peer dependency: `react` ^19, `react-dom` ^19, `tailwindcss` ^3.4.17, `lucide-react`.
+- `gainePreset()` / `gaineContent`: preset Tailwind (token warna, radius, font, dark mode).
+- `reveal.css`: animasi `[data-reveal]`.
+- `reveal(delay, variant)`: objek `{ "data-reveal", style }` polos (React: pakai `reveal` dari `@gaine/nextjs`; Vue: `v-bind`).
+- `themeInitScript` / `revealInitScript`: string script inline; `applyTheme` / `toggleTheme`: sisi client.
+- `defineLocales`, `detectLocale`: helper i18n.
 
-Subpath bebas React (dipakai `@gaine/vitepress`): `@gaine/core/theme`, `@gaine/core/i18n`, `@gaine/core/reveal`, `@gaine/core/utils`. `react`, `react-dom`, dan `lucide-react` adalah peer opsional bila hanya memakai subpath ini atau `@gaine/core/tailwind`.
+Komponen UI (`Button`, `Badge`, `Dropdown*`, `SectionHeading`, `ThemeToggle`) ada di `@gaine/nextjs`.
+Peer dependency: hanya `tailwindcss` ^3.4.17 (opsional, hanya untuk `@gaine/core/tailwind`).

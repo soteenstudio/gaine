@@ -1,5 +1,5 @@
 import { defineComponent, h } from "vue";
-import { toggleTheme } from "@gaine/core/theme";
+import { toggleTheme } from "@gaine/core";
 import { MoonIcon, SunIcon } from "./icons.js";
 
 export const ThemeToggle = defineComponent({

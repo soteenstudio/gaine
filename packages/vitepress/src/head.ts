@@ -1,5 +1,5 @@
 import type { HeadConfig } from "vitepress";
-import { themeInitScript } from "@gaine/core/theme";
+import { themeInitScript } from "@gaine/core";
 
 export interface LocaleRedirectOptions {
   locales: readonly string[];

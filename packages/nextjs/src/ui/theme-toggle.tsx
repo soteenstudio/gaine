@@ -1,7 +1,7 @@
 "use client";
 
 import { Moon, Sun } from "lucide-react";
-import { toggleTheme } from "../theme/index.js";
+import { toggleTheme } from "@gaine/core";
 
 export function ThemeToggle({ label }: { label: string }) {
   return (

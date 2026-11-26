@@ -1,7 +1,7 @@
 {
   "name": "@gaine/core",
   "version": "0.1.0",
-  "description": "Gaine core: design tokens (Tailwind preset), UI primitives React, tema, i18n, dan reveal-on-scroll. Tidak bergantung pada Next.js; subpath ./theme, ./i18n, ./reveal, ./utils bebas React.",
+  "description": "Gaine core: design tokens (preset Tailwind), tema, i18n, reveal-on-scroll, dan cn. Tanpa React/Next/Vue; dipakai @gaine/nextjs dan @gaine/vitepress.",
   "license": "MIT",
   "type": "module",
   "sideEffects": [
@@ -22,26 +22,6 @@
       "import": "./dist/tailwind/index.js",
       "default": "./dist/tailwind/index.js"
     },
-    "./theme": {
-      "types": "./dist/theme/index.d.ts",
-      "import": "./dist/theme/index.js",
-      "default": "./dist/theme/index.js"
-    },
-    "./i18n": {
-      "types": "./dist/i18n/index.d.ts",
-      "import": "./dist/i18n/index.js",
-      "default": "./dist/i18n/index.js"
-    },
-    "./reveal": {
-      "types": "./dist/reveal/index.d.ts",
-      "import": "./dist/reveal/index.js",
-      "default": "./dist/reveal/index.js"
-    },
-    "./utils": {
-      "types": "./dist/utils/cn.d.ts",
-      "import": "./dist/utils/cn.js",
-      "default": "./dist/utils/cn.js"
-    },
     "./reveal.css": "./styles/reveal.css",
     "./package.json": "./package.json"
   },
@@ -51,36 +31,19 @@
     "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\""
   },
   "dependencies": {
-    "@radix-ui/react-dropdown-menu": "^2.1.4",
-    "@radix-ui/react-slot": "^1.1.1",
-    "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7"
   },
   "peerDependencies": {
-    "lucide-react": ">=0.468.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
     "tailwindcss": "^3.4.17"
   },
   "devDependencies": {
-    "@types/react": "^19.2.0",
-    "@types/react-dom": "^19.2.0",
-    "lucide-react": "^0.468.0",
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0",
     "tailwindcss": "^3.4.17",
     "typescript": "^5.7.2"
   },
   "peerDependenciesMeta": {
-    "lucide-react": {
-      "optional": true
-    },
-    "react": {
-      "optional": true
-    },
-    "react-dom": {
+    "tailwindcss": {
       "optional": true
     }
   }

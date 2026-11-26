@@ -7,7 +7,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@gaine/core";
+} from "./ui/dropdown-menu.js";
 
 export interface LanguageSwitcherProps<L extends string> {
   locale: L;

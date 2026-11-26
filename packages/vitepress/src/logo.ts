@@ -1,6 +1,6 @@
 import { defineComponent, h, type PropType } from "vue";
 import { withBase } from "vitepress";
-import { cn } from "@gaine/core/utils";
+import { cn } from "@gaine/core";
 
 export interface LogoProps {
   href: string;

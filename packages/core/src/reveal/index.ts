@@ -1,12 +1,14 @@
-import type { CSSProperties } from "react";
-
 export type RevealVariant = "up" | "left" | "right" | "scale" | "fade";
 
+/**
+ * Atribut `data-reveal` + delay, berupa objek polos tanpa tipe framework.
+ * React: lihat `reveal` di @gaine/nextjs (menambah suppressHydrationWarning).
+ * Vue: `v-bind="reveal(120)"`.
+ */
 export function reveal(delay = 0, variant: RevealVariant = "up") {
   return {
     "data-reveal": variant,
-    style: { "--reveal-delay": `${delay}ms` } as CSSProperties,
-    suppressHydrationWarning: true as const,
+    style: { "--reveal-delay": `${delay}ms` } as Record<string, string>,
   };
 }
 

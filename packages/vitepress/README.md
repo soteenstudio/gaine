@@ -11,11 +11,11 @@ Padanan `@gaine/nextjs` untuk **VitePress** (Vue 3), di atas `@gaine/core`.
 | `createLocaleProxy` (`proxy.ts`) | `localeRedirectScript` / `gaineHead` (`./head`), redirect di browser karena situs statis |
 | `createRobots`, `createSitemap` | `createRobotsTxt`, `createSitemap`, `sitemapToXml`, `createSeoBuildEnd` (`./metadata`) |
 | `renderOgCover`, `renderOgFallback` | idem, hasil PNG via `satori` + `@resvg/resvg-js` (`./og`) |
-| n/a (ada di `@gaine/core`, React) | `ThemeToggle` |
+| `ThemeToggle` (di `@gaine/nextjs`) | `ThemeToggle` |
 
-Komponen UI React di `@gaine/core` (`Button`, `Dropdown*`, dst.) tidak bisa dipakai di Vue, jadi yang dibawa ke sini hanya
-bagian yang dipakai `@gaine/nextjs`, ditulis ulang sebagai komponen Vue dengan class Tailwind yang sama. Logika tema,
-i18n, `cn`, dan token diambil dari subpath `@gaine/core/{theme,i18n,reveal,utils,tailwind}` yang bebas React.
+Komponen UI React (`Button`, `Dropdown*`, dst.) ada di `@gaine/nextjs` dan tidak bisa dipakai di Vue, jadi di sini hanya
+komponen yang punya padanan: ditulis ulang sebagai komponen Vue dengan class Tailwind yang sama. Logika tema, i18n,
+`cn`, `reveal`, dan token datang dari `@gaine/core` yang netral.
 
 ## Setup
 
@@ -88,7 +88,7 @@ export default defineConfig({
 `.vitepress/i18n.ts`
 
 ```ts
-import { defineLocales } from "@gaine/core/i18n";
+import { defineLocales } from "@gaine/core";
 
 export const { locales, defaultLocale, localeLabels, isLocale } = defineLocales({
   locales: ["id", "en"],

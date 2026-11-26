@@ -3,10 +3,10 @@
 Lib UI/tema/i18n mandiri untuk situs berbasis **Next.js 16** atau **VitePress** dengan **Tailwind CSS 3**, diekstrak dari bagian yang kembar di
 `soteenstudio` (web utama) dan `policies`.
 
-| Package | Isi | Bergantung pada Next? |
+| Package | Isi | Bergantung pada framework? |
 | --- | --- | --- |
-| `@gaine/core` | Preset Tailwind (token warna, radius, font, dark mode), `reveal.css`, `Button`, `Badge`, `Dropdown*`, `SectionHeading`, `ThemeToggle`, `cn`, `reveal()`, `themeInitScript`, `revealInitScript`, `defineLocales`, `detectLocale` | Tidak |
-| `@gaine/nextjs` | `ThemeSync`, `ScrollReveal`, `LanguageSwitcher`, `Logo`, `createLocaleProxy`, `createRobots`, `createSitemap`, `renderOgCover`, `renderOgFallback` | Ya (`next` ^16) |
+| `@gaine/core` | Netral (tanpa framework): preset Tailwind (token warna, radius, font, dark mode), `reveal.css`, `cn`, `reveal()`, `themeInitScript`, `revealInitScript`, `applyTheme`, `toggleTheme`, `defineLocales`, `detectLocale` | Tidak |
+| `@gaine/nextjs` | UI (`Button`, `Badge`, `Dropdown*`, `SectionHeading`, `ThemeToggle`), `reveal`, `ThemeSync`, `ScrollReveal`, `LanguageSwitcher`, `Logo`, `createLocaleProxy`, `createRobots`, `createSitemap`, `renderOgCover`, `renderOgFallback` | Ya (`next` ^16) |
 | `@gaine/vitepress` | Padanan `@gaine/nextjs` untuk VitePress/Vue 3: `ThemeSync`, `ScrollReveal`, `LanguageSwitcher`, `Logo`, `ThemeToggle`, `gaineTheme`, `gaineHead`, `createSeoBuildEnd`, `renderOgCover`. Lihat [packages/vitepress](packages/vitepress/README.md) | Tidak (`vitepress` >=1.5, `vue` ^3.5) |
 
 ## Pengembangan
@@ -53,7 +53,7 @@ export default config;
 import "./globals.css";
 import "@gaine/core/reveal.css";
 import { revealInitScript, themeInitScript } from "@gaine/core";
-import { ScrollReveal, ThemeSync } from "@gaine/nextjs";
+import { ScrollReveal, ThemeSync } from "@gaine/nextjs"; // komponen UI (Button, dst.) juga dari sini
 ```
 
 `next.config.ts`: tambahkan `transpilePackages: ["@gaine/core", "@gaine/nextjs"]`.

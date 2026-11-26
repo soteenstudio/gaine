@@ -1,5 +1,5 @@
-import { reveal } from "../reveal/index.js";
-import { cn } from "../utils/cn.js";
+import { reveal } from "../reveal.js";
+import { cn } from "@gaine/core";
 interface SectionHeadingProps {
     eyebrow: string;
     title: string;
