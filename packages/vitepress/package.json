@@ -1,6 +1,6 @@
 {
   "name": "@gaine/vitepress",
-  "version": "0.2.0",
+  "version": "0.1.0",
   "description": "Gaine for VitePress (Vue 3): ThemeSync, ScrollReveal, LanguageSwitcher, Logo, ThemeToggle, locale redirect, robots/sitemap, and OG images. Speed layer: withGaineSpeed, MPA mode, inline runtime, speculation rules.",
   "license": "Apache-2.0",
   "type": "module",
