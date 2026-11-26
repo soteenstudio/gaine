@@ -1,8 +1,30 @@
+/*
+ * Copyright 2026 SoTeen Studio
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import { gaineContent, gainePreset } from "@gaine/core/tailwind";
 
 /** @type {import("tailwindcss").Config} */
 export default {
-  presets: [gainePreset()], // change the brand color: gainePreset({ light: { brand: "250 80% 55%" } })
-  corePlugins: { preflight: false }, // do not break the default VitePress theme styling
-  content: ["./.vitepress/theme/**/*.js", "./*.md", "./id/**/*.md", "./en/**/*.md", ...gaineContent],
+  presets: [gainePreset()],
+  corePlugins: { preflight: false },
+  content: [
+    "./.vitepress/theme/**/*.js",
+    "./*.md",
+    "./id/**/*.md",
+    "./en/**/*.md",
+    ...gaineContent,
+  ],
 };
