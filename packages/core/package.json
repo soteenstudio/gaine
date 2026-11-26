@@ -1,6 +1,6 @@
 {
   "name": "@gaine/core",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Framework-free core for Gaine, with no React or Vue lock-in",
   "license": "Apache-2.0",
   "type": "module",
