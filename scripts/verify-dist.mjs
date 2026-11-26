@@ -29,6 +29,23 @@ function walk(dir) {
   );
 }
 
+/*
+ * Minified output is a handful of very long lines. Small files are only one or
+ * two lines (plus the trailing newline), and multi-line template literals add
+ * legitimate newlines inside strings, so counting lines against file size
+ * gives false positives. Unminified code instead has many lines that end
+ * statements or blocks (`;`, `{`, `}`), which string contents rarely do.
+ */
+function looksUnminified(text) {
+  const lines = text
+    .replace(/^\/\/# sourceMappingURL=.*$/gm, "")
+    .split("\n")
+    .filter((l) => l.trim());
+  if (lines.length < 10) return false;
+  const codeLike = lines.filter((l) => /[;{}]\s*$/.test(l)).length;
+  return codeLike / lines.length > 0.3;
+}
+
 function targets(value) {
   if (typeof value === "string") return [value];
   return Object.values(value ?? {}).flatMap(targets);
@@ -66,8 +83,7 @@ for (const name of ["core", "nextjs", "vitepress", "gaine"]) {
   const dist = join(ROOT, "packages", name, "dist");
   if (!existsSync(dist)) continue;
   for (const file of walk(dist).filter((f) => f.endsWith(".js"))) {
-    const text = readFileSync(file, "utf8");
-    if (text.length > 500 && text.split("\n").length > text.length / 400)
+    if (looksUnminified(readFileSync(file, "utf8")))
       fail(`${name}: looks unminified: ${file.slice(ROOT.length + 1)}`);
   }
 }
