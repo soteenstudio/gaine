@@ -1,6 +1,6 @@
 # Gaine
 
-Shared UI, theming, i18n, SEO, and speed tooling for Next.js and VitePress projects.
+Our internal UI kit and web essentials for Next.js and VitePress, shared openly.
 
 Docs: [https://gaine.soteenstudio.my.id](https://gaine.soteenstudio.my.id)
 
