@@ -29,13 +29,6 @@ function walk(dir) {
   );
 }
 
-/*
- * Minified output is a handful of very long lines. Small files are only one or
- * two lines (plus the trailing newline), and multi-line template literals add
- * legitimate newlines inside strings, so counting lines against file size
- * gives false positives. Unminified code instead has many lines that end
- * statements or blocks (`;`, `{`, `}`), which string contents rarely do.
- */
 function looksUnminified(text) {
   const lines = text
     .replace(/^\/\/# sourceMappingURL=.*$/gm, "")
