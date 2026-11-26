@@ -1,29 +1,35 @@
 # @gaine/core
 
-The neutral core of Gaine: no React, Next.js, or Vue. Used by `@gaine/nextjs` and `@gaine/vitepress`.
+Framework-free core for Gaine (`@gaine/nextjs` and `@gaine/vitepress`), with no React or Vue lock-in.
+
+Docs: [https://gaine.soteenstudio.my.id](https://gaine.soteenstudio.my.id)
 
 ```ts
 import {
-  cn, reveal, revealInitScript, themeInitScript, applyTheme, toggleTheme, THEME_STORAGE_KEY,
-  defineLocales, detectLocale,
+  cn,
+  reveal,
+  revealInitScript,
+  themeInitScript,
+  applyTheme,
+  toggleTheme,
+  defineLocales,
+  detectLocale,
 } from "@gaine/core";
 import { gainePreset, gaineContent } from "@gaine/core/tailwind";
 import "@gaine/core/reveal.css";
 ```
 
-- `gainePreset()` / `gaineContent`: Tailwind preset (color tokens, radius, font, dark mode).
-- `reveal.css`: `[data-reveal]` animations.
-- `reveal(delay, variant)`: a plain `{ "data-reveal", style }` object (React: use `reveal` from `@gaine/nextjs`; Vue: `v-bind`).
-- `themeInitScript` / `revealInitScript`: inline script strings; `applyTheme` / `toggleTheme`: client side.
-- `defineLocales`, `detectLocale`: i18n helpers.
+## What is inside
 
-UI components (`Button`, `Badge`, `Dropdown*`, `SectionHeading`, `ThemeToggle`) live in `@gaine/nextjs`.
-Peer dependency: only `tailwindcss` ^3.4.17 (optional, needed only for `@gaine/core/tailwind`).
+- **Theme & reveal**: `themeInitScript`, `revealInitScript`, `applyTheme`, `toggleTheme`, and `reveal()` (returns `{ "data-reveal", style }`; pair with `reveal.css`).
+- **Locale & class helpers**: `defineLocales`, `detectLocale`, and `cn`.
+- **Tailwind preset**: `gainePreset()` and `gaineContent` from `@gaine/core/tailwind` (optional `tailwindcss` ^3.4.17 peer dep).
+- **Speed (`@gaine/core/speed`)**: Shared performance and header helpers, Node build checks under `@gaine/core/speed/node` (`measureBuild`, `checkBudget`), and optional stylesheets (`speed.css`, `view-transition.css`).
 
-## Speed (`@gaine/core/speed`)
+UI components live in the framework packages (`@gaine/nextjs` and `@gaine/vitepress`). Check the root README for full usage details.
 
-Framework-neutral speed logic shared by `@gaine/nextjs` and `@gaine/vitepress`: `gaineRuntimeScript`, `speculationRules`,
-`optimizeHtml`, `resourceHints`, `hintsToHtml`, `hintsToLinkHeader`, `speedHeaders`, `toHeadersFile`, `toNextHeaders`,
-`renderLanguageMenu`, `renderThemeToggle`. Node-only build tooling lives in `@gaine/core/speed/node` (`measureBuild`, `checkBudget`).
-CSS: `@gaine/core/speed.css` (`.gaine-defer`) and `@gaine/core/view-transition.css`. See the root README for usage.
-Tests: `pnpm --filter @gaine/core build && pnpm --filter @gaine/core test`.
+## Dev
+
+```bash
+pnpm --filter @gaine/core build && pnpm --filter @gaine/core test
+```
