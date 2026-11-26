@@ -1,8 +1,23 @@
+/*
+ * Copyright 2026 SoTeen Studio
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import fs from "node:fs";
 import path from "node:path";
 import zlib from "node:zlib";
 
-// Daftar nama file atau folder yang diabaikan
 const IGNORE = [
   "node_modules",
   "test-speed",
@@ -11,12 +26,11 @@ const IGNORE = [
   ".git",
   ".tarball",
   "gaine.zip",
-  path.basename(import.meta.url), // abaikan file script ini sendiri
+  path.basename(import.meta.url),
 ];
 
 const OUTPUT_ZIP = path.resolve(process.cwd(), "gaine.zip");
 
-// Tabel lookup CRC32 standar ZIP
 const CRC_TABLE = (() => {
   const table = new Uint32Array(256);
   for (let i = 0; i < 256; i++) {
@@ -42,11 +56,9 @@ function toDosTimeDate(date = new Date()) {
   const dosTime =
     ((date.getHours() & 0x1f) << 11) |
     ((date.getMinutes() & 0x3f) << 5) |
-    ((Math.floor(date.getSeconds() / 2)) & 0x1f);
+    (Math.floor(date.getSeconds() / 2) & 0x1f);
   const dosDate =
-    (((year - 1980) & 0x7f) << 9) |
-    (((date.getMonth() + 1) & 0x0f) << 5) |
-    (date.getDate() & 0x1f);
+    (((year - 1980) & 0x7f) << 9) | (((date.getMonth() + 1) & 0x0f) << 5) | (date.getDate() & 0x1f);
   return { dosTime, dosDate };
 }
 
@@ -84,12 +96,11 @@ function createZip(rootDir, outFile) {
     const nameBuf = Buffer.from(item.zipName, "utf8");
 
     if (item.type === "dir") {
-      // Local file header untuk folder
       const localHeader = Buffer.alloc(30);
       localHeader.writeUInt32LE(0x04034b50, 0);
       localHeader.writeUInt16LE(20, 4);
-      localHeader.writeUInt16LE(0x0800, 6); // UTF-8
-      localHeader.writeUInt16LE(0, 8); // STORE
+      localHeader.writeUInt16LE(0x0800, 6);
+      localHeader.writeUInt16LE(0, 8);
       localHeader.writeUInt16LE(dosTime, 10);
       localHeader.writeUInt16LE(dosDate, 12);
       localHeader.writeUInt32LE(0, 14);
@@ -100,7 +111,6 @@ function createZip(rootDir, outFile) {
 
       localChunks.push(localHeader, nameBuf);
 
-      // Central directory header untuk folder
       const centralHeader = Buffer.alloc(46);
       centralHeader.writeUInt32LE(0x02014b50, 0);
       centralHeader.writeUInt16LE(20, 4);
@@ -117,7 +127,7 @@ function createZip(rootDir, outFile) {
       centralHeader.writeUInt16LE(0, 32);
       centralHeader.writeUInt16LE(0, 34);
       centralHeader.writeUInt16LE(0, 36);
-      centralHeader.writeUInt32LE(0x10, 38); // directory attribute
+      centralHeader.writeUInt32LE(0x10, 38);
       centralHeader.writeUInt32LE(offset, 42);
 
       centralChunks.push(centralHeader, nameBuf);
@@ -129,7 +139,6 @@ function createZip(rootDir, outFile) {
     const checksum = crc32(rawData);
     const compressed = zlib.deflateRawSync(rawData);
 
-    // Pakai DEFLATE jika lebih kecil, jika tidak pakai STORE
     const useDeflate = compressed.length < rawData.length;
     const payload = useDeflate ? compressed : rawData;
     const method = useDeflate ? 8 : 0;
@@ -137,7 +146,7 @@ function createZip(rootDir, outFile) {
     const localHeader = Buffer.alloc(30);
     localHeader.writeUInt32LE(0x04034b50, 0);
     localHeader.writeUInt16LE(20, 4);
-    localHeader.writeUInt16LE(0x0800, 6); // UTF-8
+    localHeader.writeUInt16LE(0x0800, 6);
     localHeader.writeUInt16LE(method, 8);
     localHeader.writeUInt16LE(dosTime, 10);
     localHeader.writeUInt16LE(dosDate, 12);

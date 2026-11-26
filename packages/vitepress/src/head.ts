@@ -1,20 +1,29 @@
+/*
+ * Copyright 2026 SoTeen Studio
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import type { HeadConfig } from "vitepress";
 import { themeInitScript } from "@gaine/core";
 
 export interface LocaleRedirectOptions {
   locales: readonly string[];
   defaultLocale: string;
-  /** Same as `base` in the VitePress config. Defaults to `/`. */
   base?: string;
-  /** Path prefixes that are not redirected, e.g. `["/api/"]`. */
   exclude?: readonly string[];
 }
 
-/**
- * Counterpart of `createLocaleProxy` for static sites: VitePress has no server,
- * so the redirect happens in the browser based on `navigator.languages`.
- * Paths without a locale prefix are redirected to `/{locale}{path}`.
- */
 export function localeRedirectScript({
   locales,
   defaultLocale,
@@ -34,23 +43,20 @@ export function localeRedirectScript({
 }
 
 export interface GaineHeadOptions extends Partial<LocaleRedirectOptions> {
-  /** Provide together with `defaultLocale` to enable the locale redirect. */
   locales?: readonly string[];
 }
 
-/**
- * `head` entries for the VitePress config: `themeInitScript` (`js` + `dark` classes before paint)
- * and, when `locales`/`defaultLocale` are given, the locale redirect.
- * The initial reveal script is not used here because `head` runs before <body>;
- * `<ScrollReveal />` handles it on mount.
- */
 export function gaineHead(options: GaineHeadOptions = {}): HeadConfig[] {
   const head: HeadConfig[] = [["script", {}, themeInitScript]];
   if (options.locales && options.defaultLocale) {
     head.push([
       "script",
       {},
-      localeRedirectScript({ ...options, locales: options.locales, defaultLocale: options.defaultLocale }),
+      localeRedirectScript({
+        ...options,
+        locales: options.locales,
+        defaultLocale: options.defaultLocale,
+      }),
     ]);
   }
   return head;

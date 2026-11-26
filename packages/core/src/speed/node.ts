@@ -1,3 +1,19 @@
+/*
+ * Copyright 2026 SoTeen Studio
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import { readdir, readFile } from "node:fs/promises";
 import { join, posix, relative, sep } from "node:path";
 import { gzipSync } from "node:zlib";
@@ -34,9 +50,13 @@ async function walk(dir: string, out: string[] = []): Promise<string[]> {
 }
 
 const gz = (buf: Buffer | string) => gzipSync(buf, { level: 9 }).length;
-const ATTR = (tag: string, name: string) => new RegExp(`\\s${name}=(?:"([^"]*)"|'([^']*)')`, "i").exec(tag)?.slice(1).find(Boolean);
+const ATTR = (tag: string, name: string) =>
+  new RegExp(`\\s${name}=(?:"([^"]*)"|'([^']*)')`, "i").exec(tag)?.slice(1).find(Boolean);
 
-export async function measureBuild(outDir: string, options: { base?: string } = {}): Promise<BuildReport> {
+export async function measureBuild(
+  outDir: string,
+  options: { base?: string } = {},
+): Promise<BuildReport> {
   const base = normalizeBase(options.base);
   const files = await walk(outDir);
   const cache = new Map<string, number>();
@@ -75,7 +95,11 @@ export async function measureBuild(outDir: string, options: { base?: string } = 
       else js += await sizeOf(abs);
     }
     for (const m of html.matchAll(/<(script|style)\b[^>]*>([\s\S]*?)<\/\1>/gi)) {
-      if (m[2] && !/\ssrc=/i.test(m[0]) && !/type=["']?(?:application\/(?:ld\+)?json|speculationrules)/i.test(m[0])) {
+      if (
+        m[2] &&
+        !/\ssrc=/i.test(m[0]) &&
+        !/type=["']?(?:application\/(?:ld\+)?json|speculationrules)/i.test(m[0])
+      ) {
         inline += gz(m[2]);
       }
     }
@@ -97,9 +121,12 @@ export async function measureBuild(outDir: string, options: { base?: string } = 
 export function checkBudget(report: BuildReport, limits: BudgetLimits): string[] {
   const problems: string[] = [];
   for (const p of report.pages) {
-    if (limits.js !== undefined && p.js > limits.js) problems.push(`${p.page}: JS ${p.js} B > ${limits.js} B (gzip)`);
-    if (limits.css !== undefined && p.css > limits.css) problems.push(`${p.page}: CSS ${p.css} B > ${limits.css} B (gzip)`);
-    if (limits.total !== undefined && p.total > limits.total) problems.push(`${p.page}: total ${p.total} B > ${limits.total} B (gzip)`);
+    if (limits.js !== undefined && p.js > limits.js)
+      problems.push(`${p.page}: JS ${p.js} B > ${limits.js} B (gzip)`);
+    if (limits.css !== undefined && p.css > limits.css)
+      problems.push(`${p.page}: CSS ${p.css} B > ${limits.css} B (gzip)`);
+    if (limits.total !== undefined && p.total > limits.total)
+      problems.push(`${p.page}: total ${p.total} B > ${limits.total} B (gzip)`);
   }
   return problems;
 }

@@ -1,4 +1,20 @@
 #!/usr/bin/env node
+/*
+ * Copyright 2026 SoTeen Studio
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 /**
  * Source formatter for the Gaine monorepo.
  *
@@ -69,14 +85,19 @@ async function loadDeps() {
     const prettier = await import("prettier");
     return { ts, prettier };
   } catch {
-    throw new Error("Missing dependencies. Run `pnpm install` first (needs typescript and prettier).");
+    throw new Error(
+      "Missing dependencies. Run `pnpm install` first (needs typescript and prettier).",
+    );
   }
 }
 
 async function loadConfig() {
   const file = join(ROOT, "format.config.json");
   const config = existsSync(file) ? JSON.parse(await readFile(file, "utf8")) : {};
-  return { holder: config.holder ?? "The Gaine Authors", year: config.year ?? new Date().getFullYear() };
+  return {
+    holder: config.holder ?? "The Gaine Authors",
+    year: config.year ?? new Date().getFullYear(),
+  };
 }
 
 function licenseHeader(year, holder) {
@@ -123,8 +144,14 @@ function removeRanges(text, ranges) {
 
 function stripScriptComments(ts, text, file, strict) {
   const ext = extname(file);
-  const kind = ext === ".tsx" ? ts.ScriptKind.TSX : ext === ".jsx" ? ts.ScriptKind.JSX
-    : [".js", ".mjs", ".cjs"].includes(ext) ? ts.ScriptKind.JS : ts.ScriptKind.TS;
+  const kind =
+    ext === ".tsx"
+      ? ts.ScriptKind.TSX
+      : ext === ".jsx"
+        ? ts.ScriptKind.JSX
+        : [".js", ".mjs", ".cjs"].includes(ext)
+          ? ts.ScriptKind.JS
+          : ts.ScriptKind.TS;
   const sf = ts.createSourceFile(file, text, ts.ScriptTarget.Latest, true, kind);
   if (sf.parseDiagnostics?.length) {
     throw new Error(`syntax error, skipped (${sf.parseDiagnostics[0].messageText})`);
@@ -136,7 +163,8 @@ function stripScriptComments(ts, text, file, strict) {
   const collect = (list) => list?.forEach((r) => found.set(r.pos, r));
 
   const walk = (node) => {
-    if (node.kind >= ts.SyntaxKind.FirstJSDocNode && node.kind <= ts.SyntaxKind.LastJSDocNode) return;
+    if (node.kind >= ts.SyntaxKind.FirstJSDocNode && node.kind <= ts.SyntaxKind.LastJSDocNode)
+      return;
     if (node.kind === ts.SyntaxKind.JsxText) {
       jsxText.push([node.getFullStart(), node.getEnd()]);
       return;
@@ -190,7 +218,11 @@ async function listFiles(entry, options, files = []) {
       if (IGNORED_DIRS.has(name)) continue;
       await listFiles(join(entry, name), options, files);
     }
-  } else if (CODE_EXT.has(extname(entry)) || CSS_EXT.has(extname(entry)) || JSON_EXT.has(extname(entry))) {
+  } else if (
+    CODE_EXT.has(extname(entry)) ||
+    CSS_EXT.has(extname(entry)) ||
+    JSON_EXT.has(extname(entry))
+  ) {
     if (options.templates || !entry.startsWith(TEMPLATES_DIR + sep)) files.push(entry);
   }
   return files;
@@ -223,7 +255,9 @@ async function processFile(file, ctx) {
 async function main() {
   const options = parseArgs(argv.slice(2));
   if (options.help) {
-    console.log("Usage: node scripts/format-sources.mjs [paths...] [--check] [--strict] [--include-templates] [--no-header] [--holder <name>] [--year <year>]");
+    console.log(
+      "Usage: node scripts/format-sources.mjs [paths...] [--check] [--strict] [--include-templates] [--no-header] [--holder <name>] [--year <year>]",
+    );
     return;
   }
   const { ts, prettier } = await loadDeps();
@@ -250,9 +284,12 @@ async function main() {
   }
 
   const rel = (f) => relative(ROOT, f) || f;
-  for (const file of changed) console.log(`${options.check ? "would change" : "updated"}  ${rel(file)}`);
+  for (const file of changed)
+    console.log(`${options.check ? "would change" : "updated"}  ${rel(file)}`);
   for (const [file, message] of failed) console.error(`failed   ${rel(file)}: ${message}`);
-  console.log(`\n${files.length} files checked, ${changed.length} ${options.check ? "need changes" : "updated"}, ${failed.length} failed.`);
+  console.log(
+    `\n${files.length} files checked, ${changed.length} ${options.check ? "need changes" : "updated"}, ${failed.length} failed.`,
+  );
   if (failed.length || (options.check && changed.length)) exit(1);
 }
 

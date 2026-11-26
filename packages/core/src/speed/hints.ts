@@ -1,3 +1,19 @@
+/*
+ * Copyright 2026 SoTeen Studio
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 export interface ResourceHint {
   rel: "preload" | "preconnect" | "dns-prefetch" | "prefetch" | "modulepreload";
   href: string;
@@ -9,7 +25,8 @@ export interface ResourceHint {
 }
 
 function assertSafe(value: string, what: string) {
-  if (/[\r\n<>"\s]/.test(value)) throw new Error(`Gaine: invalid ${what}: ${JSON.stringify(value)}`);
+  if (/[\r\n<>"\s]/.test(value))
+    throw new Error(`Gaine: invalid ${what}: ${JSON.stringify(value)}`);
 }
 
 export function fontPreload(href: string, type = "font/woff2"): ResourceHint {
@@ -26,17 +43,25 @@ export interface ResourceHintInput {
 
 export function resourceHints(input: ResourceHintInput): ResourceHint[] {
   const hints: ResourceHint[] = [];
-  for (const href of input.preconnect ?? []) hints.push({ rel: "preconnect", href, crossorigin: true });
+  for (const href of input.preconnect ?? [])
+    hints.push({ rel: "preconnect", href, crossorigin: true });
   for (const href of input.dnsPrefetch ?? []) hints.push({ rel: "dns-prefetch", href });
   for (const href of input.fonts ?? []) hints.push(fontPreload(href, fontType(href)));
   for (const href of input.styles ?? []) hints.push({ rel: "preload", href, as: "style" });
-  for (const href of input.images ?? []) hints.push({ rel: "preload", href, as: "image", fetchpriority: "high" });
+  for (const href of input.images ?? [])
+    hints.push({ rel: "preload", href, as: "image", fetchpriority: "high" });
   return hints;
 }
 
 function fontType(href: string): string {
   const ext = href.split(/[?#]/)[0]?.split(".").pop()?.toLowerCase();
-  return ext === "woff" ? "font/woff" : ext === "ttf" ? "font/ttf" : ext === "otf" ? "font/otf" : "font/woff2";
+  return ext === "woff"
+    ? "font/woff"
+    : ext === "ttf"
+      ? "font/ttf"
+      : ext === "otf"
+        ? "font/otf"
+        : "font/woff2";
 }
 
 const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");

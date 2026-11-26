@@ -1,3 +1,19 @@
+/*
+ * Copyright 2026 SoTeen Studio
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import { createInterface, emitKeypressEvents } from "node:readline";
 import { stdin, stdout } from "node:process";
 
@@ -19,8 +35,10 @@ export interface Choice<T extends string> {
   hint?: string;
 }
 
-/** Choice menu with up/down arrows + Enter (also j/k, digits 1-9). Ctrl+C / Esc cancels. */
-export function select<T extends string>(message: string, choices: readonly Choice<T>[]): Promise<T> {
+export function select<T extends string>(
+  message: string,
+  choices: readonly Choice<T>[],
+): Promise<T> {
   return new Promise((resolve, reject) => {
     let index = 0;
     let first = true;
@@ -82,7 +100,6 @@ export function select<T extends string>(message: string, choices: readonly Choi
   });
 }
 
-/** Single-line text input with a default value; repeats until `validate` passes. */
 export async function text(
   message: string,
   initial: string,
@@ -92,10 +109,13 @@ export async function text(
     const rl = createInterface({ input: stdin, output: stdout });
     const answer = await new Promise<string | null>((resolve) => {
       rl.once("close", () => resolve(null));
-      rl.question(`${color.cyan("◆")} ${color.bold(message)} ${color.dim(`(${initial})`)}\n${color.dim("│")}  `, (a) => {
-        resolve(a);
-        rl.close();
-      });
+      rl.question(
+        `${color.cyan("◆")} ${color.bold(message)} ${color.dim(`(${initial})`)}\n${color.dim("│")}  `,
+        (a) => {
+          resolve(a);
+          rl.close();
+        },
+      );
     });
     if (answer === null) throw new Cancelled();
     const value = answer.trim() || initial;

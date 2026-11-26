@@ -1,8 +1,22 @@
+/*
+ * Copyright 2026 SoTeen Studio
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import type { SiteConfig } from "vitepress";
-
-/** Node only (config / `buildEnd`); do not import from client code. */
 
 export function createRobotsTxt(options: { baseUrl: string; disallow?: string[] }): string {
   const lines = ["User-agent: *", "Allow: /"];
@@ -12,13 +26,7 @@ export function createRobotsTxt(options: { baseUrl: string; disallow?: string[] 
 }
 
 export type ChangeFrequency =
-  | "always"
-  | "hourly"
-  | "daily"
-  | "weekly"
-  | "monthly"
-  | "yearly"
-  | "never";
+  "always" | "hourly" | "daily" | "weekly" | "monthly" | "yearly" | "never";
 
 export interface SitemapPage {
   path: string;
@@ -33,7 +41,6 @@ export interface SitemapEntry {
   priority: number;
 }
 
-/** Same entry shape as `createSitemap` in @gaine/nextjs. */
 export function createSitemap<L extends string>(options: {
   baseUrl: string;
   locales: readonly L[];
@@ -56,7 +63,12 @@ export function createSitemap<L extends string>(options: {
 }
 
 const escapeXml = (s: string) =>
-  s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&apos;");
+  s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&apos;");
 
 export function sitemapToXml(entries: readonly SitemapEntry[]): string {
   const items = entries.map(
@@ -66,10 +78,6 @@ export function sitemapToXml(entries: readonly SitemapEntry[]): string {
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${items.join("\n")}\n</urlset>\n`;
 }
 
-/**
- * `buildEnd` hook that writes `robots.txt` and `sitemap.xml` to the output folder.
- * Do not combine with VitePress's built-in `sitemap` option (same file name).
- */
 export function createSeoBuildEnd<L extends string>(options: {
   baseUrl: string;
   locales: readonly L[];

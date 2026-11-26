@@ -1,21 +1,20 @@
 #!/usr/bin/env node
-/**
- * Release helper for the Gaine monorepo (lockstep versioning: every public
- * package shares one version).
+/*
+ * Copyright 2026 SoTeen Studio
  *
- *   node scripts/release.mjs bump <patch|minor|major|x.y.z[-pre.n]>
- *       Bumps every public package, syncs @gaine/* ranges in the scaffold
- *       templates, prints the new version.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *   node scripts/release.mjs prepare <vX.Y.Z>
- *       Verifies tag == package versions, injects `repository` metadata
- *       (needed for npm provenance) and writes version / dist_tag /
- *       prerelease to $GITHUB_OUTPUT.
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *   node scripts/release.mjs notes <vX.Y.Z> [--prev <tag>] [--repo owner/name]
- *       Prints GitHub release notes (Markdown) to stdout, grouped by
- *       Conventional Commit type, with contributors and a compare link.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
+
 import { appendFileSync, readFileSync, readdirSync, writeFileSync, existsSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { execFileSync } from "node:child_process";
@@ -67,7 +66,9 @@ function nextVersion(current, input) {
     case "patch":
       return pre ? `${major}.${minor}.${patch}` : `${major}.${minor}.${patch + 1}`;
     default:
-      throw new Error(`Unknown bump "${input}". Use patch, minor, major or an explicit x.y.z[-pre.n].`);
+      throw new Error(
+        `Unknown bump "${input}". Use patch, minor, major or an explicit x.y.z[-pre.n].`,
+      );
   }
 }
 
@@ -83,9 +84,13 @@ function templateManifests() {
 function bump(input) {
   if (!input) throw new Error("Usage: release.mjs bump <patch|minor|major|x.y.z>");
   const pkgs = publicPackages();
-  const current = pkgs.map((p) => p.json.version).sort(cmp).at(-1);
+  const current = pkgs
+    .map((p) => p.json.version)
+    .sort(cmp)
+    .at(-1);
   const version = nextVersion(current, input);
-  if (cmp(version, current) <= 0) throw new Error(`New version ${version} must be greater than ${current}`);
+  if (cmp(version, current) <= 0)
+    throw new Error(`New version ${version} must be greater than ${current}`);
   const names = new Set(pkgs.map((p) => p.json.name));
 
   for (const p of pkgs) {
@@ -120,7 +125,8 @@ function prepare(tag) {
   const wrong = pkgs.filter((p) => p.json.version !== version);
   if (wrong.length) {
     throw new Error(
-      `Tag ${tag} does not match package versions: ` + wrong.map((p) => `${p.json.name}@${p.json.version}`).join(", "),
+      `Tag ${tag} does not match package versions: ` +
+        wrong.map((p) => `${p.json.name}@${p.json.version}`).join(", "),
     );
   }
 
@@ -135,7 +141,7 @@ function prepare(tag) {
     }
   }
 
-  const distTag = pre ? (pre.split(".")[0] || "next") : "latest";
+  const distTag = pre ? pre.split(".")[0] || "next" : "latest";
   setOutput("version", version);
   setOutput("dist_tag", distTag);
   setOutput("prerelease", pre ? "true" : "false");
@@ -164,8 +170,11 @@ function previousTag(tag) {
     .split("\n")
     .filter((t) => t && t !== tag && SEMVER.test(t.slice(1)));
   const isPre = Boolean(parse(tag.slice(1)).pre);
-  // Stable releases compare against the previous stable; prereleases against the latest tag.
-  return (isPre ? tags : tags.filter((t) => !parse(t.slice(1)).pre)).sort((a, b) => cmp(b.slice(1), a.slice(1)))[0] ?? null;
+  return (
+    (isPre ? tags : tags.filter((t) => !parse(t.slice(1)).pre)).sort((a, b) =>
+      cmp(b.slice(1), a.slice(1)),
+    )[0] ?? null
+  );
 }
 
 function loginFrom(email, name) {
@@ -227,7 +236,10 @@ function notes(tag, opts) {
 
     grouped.get(breaking ? "breaking" : type).push(line);
     if (breaking && type !== "breaking") {
-      const detail = /^BREAKING[ -]CHANGE:\s*([\s\S]+)/m.exec(c.body)?.[1]?.split("\n\n")[0]?.trim();
+      const detail = /^BREAKING[ -]CHANGE:\s*([\s\S]+)/m
+        .exec(c.body)?.[1]
+        ?.split("\n\n")[0]
+        ?.trim();
       if (detail) grouped.get("breaking").push(`  - ${detail.replace(/\n/g, " ")}`);
     }
   }
@@ -247,20 +259,33 @@ function notes(tag, opts) {
 
   out.push(`### 📦 Packages`, "", "| Package | Version |", "| --- | --- |");
   for (const p of pkgs) {
-    out.push(`| [\`${p.json.name}\`](https://www.npmjs.com/package/${p.json.name}/v/${version}) | \`${version}\` |`);
+    out.push(
+      `| [\`${p.json.name}\`](https://www.npmjs.com/package/${p.json.name}/v/${version}) | \`${version}\` |`,
+    );
   }
   out.push("");
 
-  // First-time contributors: authors with no commits before the previous tag.
   const newcomers = [];
   if (prev) {
     for (const [, a] of authors) {
-      const earlier = git("log", "-1", "--format=%H", `--author=${a.email}`, "--fixed-strings", prev);
+      const earlier = git(
+        "log",
+        "-1",
+        "--format=%H",
+        `--author=${a.email}`,
+        "--fixed-strings",
+        prev,
+      );
       if (!earlier) newcomers.push(a.who);
     }
   }
   if (newcomers.length) {
-    out.push(`### 🎉 New Contributors`, "", ...newcomers.map((w) => `- ${w} made their first contribution`), "");
+    out.push(
+      `### 🎉 New Contributors`,
+      "",
+      ...newcomers.map((w) => `- ${w} made their first contribution`),
+      "",
+    );
   }
   if (authors.size) {
     out.push(`### 👥 Contributors`, "", [...authors.values()].map((a) => a.who).join(", "), "");

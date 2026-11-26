@@ -1,5 +1,29 @@
 #!/usr/bin/env node
-import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync, copyFileSync } from "node:fs";
+/*
+ * Copyright 2026 SoTeen Studio
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import {
+  existsSync,
+  mkdirSync,
+  readdirSync,
+  readFileSync,
+  statSync,
+  writeFileSync,
+  copyFileSync,
+} from "node:fs";
 import { basename, join, relative, resolve } from "node:path";
 import { argv, cwd, exit, stdin, env } from "node:process";
 import { fileURLToPath } from "node:url";
@@ -35,7 +59,13 @@ Without options, an interactive menu is shown. Use "." as the name for the curre
 const pkgRoot = resolve(fileURLToPath(import.meta.url), "../..");
 
 function parseArgs(args: string[]) {
-  const out: { dir?: string; framework?: string; lang?: string; help?: boolean; version?: boolean } = {};
+  const out: {
+    dir?: string;
+    framework?: string;
+    lang?: string;
+    help?: boolean;
+    version?: boolean;
+  } = {};
   for (let i = 0; i < args.length; i++) {
     const a = args[i]!;
     const [flag, inline] = a.startsWith("--") ? a.split("=", 2) : [a, undefined];
@@ -58,13 +88,14 @@ function fail(message: string): never {
 
 const NAME_RE = /^(?:@[a-z0-9-*~][a-z0-9-*._~]*\/)?[a-z0-9-~][a-z0-9-._~]*$/;
 const validateName = (v: string) =>
-  v === "." || NAME_RE.test(v) ? undefined : "Name must be lowercase letters, digits, or - . _ (a valid npm package name).";
+  v === "." || NAME_RE.test(v)
+    ? undefined
+    : "Name must be lowercase letters, digits, or - . _ (a valid npm package name).";
 
 function isEmptyDir(dir: string) {
   return !existsSync(dir) || readdirSync(dir).every((f) => f === ".git");
 }
 
-/** Copy a template. `_gitignore` -> `.gitignore` (npm drops .gitignore when publishing). */
 function copyDir(from: string, to: string, vars: Record<string, string>, written: string[]) {
   mkdirSync(to, { recursive: true });
   for (const entry of readdirSync(from)) {
@@ -131,7 +162,9 @@ async function main() {
   const pm = packageManager();
   const rel = relative(cwd(), dir);
   const run = pm === "npm" ? "npm run" : pm;
-  console.log(`\n${color.green("✔")} Project created in ${color.bold(rel || ".")} (${written.length} files)\n`);
+  console.log(
+    `\n${color.green("✔")} Project created in ${color.bold(rel || ".")} (${written.length} files)\n`,
+  );
   console.log("Next steps:\n");
   if (rel) console.log(`  cd ${rel}`);
   console.log(`  ${pm} install`);

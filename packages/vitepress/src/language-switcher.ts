@@ -1,9 +1,24 @@
+/*
+ * Copyright 2026 SoTeen Studio
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import { computed, defineComponent, h, onBeforeUnmount, onMounted, ref, type PropType } from "vue";
 import { useRoute, withBase } from "vitepress";
 import { CheckIcon, GlobeIcon } from "./icons.js";
 
 export interface LanguageSwitcherProps {
-  /** Active locale. Defaults to the first path segment if it matches, otherwise `defaultLocale`. */
   locale?: string;
   label: string;
   locales: readonly string[];
@@ -11,11 +26,6 @@ export interface LanguageSwitcherProps {
   defaultLocale?: string;
 }
 
-/**
- * Language dropdown for the `/{locale}/...` path structure (every locale is prefixed,
- * same as the Next.js version). Items are plain <a> elements so VitePress SPA navigation
- * still handles the base path and prefetching.
- */
 export const LanguageSwitcher = defineComponent({
   name: "GaineLanguageSwitcher",
   props: {
@@ -34,7 +44,9 @@ export const LanguageSwitcher = defineComponent({
     const current = computed(() => {
       if (props.locale) return props.locale;
       const first = segments.value[1] ?? "";
-      return props.locales.includes(first) ? first : (props.defaultLocale ?? props.locales[0] ?? "");
+      return props.locales.includes(first)
+        ? first
+        : (props.defaultLocale ?? props.locales[0] ?? "");
     });
 
     function pathFor(target: string) {
@@ -92,7 +104,6 @@ export const LanguageSwitcher = defineComponent({
                     role: "menuitem",
                     lang: l,
                     href: withBase(pathFor(l)),
-                    // keep the #hash when switching language (read by the VitePress router afterwards)
                     onClick: (e: MouseEvent) => {
                       const a = e.currentTarget as HTMLAnchorElement;
                       a.href = withBase(pathFor(l)) + window.location.hash;
@@ -101,7 +112,10 @@ export const LanguageSwitcher = defineComponent({
                     class:
                       "flex cursor-pointer select-none flex-row items-center justify-between rounded-xl px-3 py-2.5 text-sm no-underline text-popover-foreground outline-none transition-colors hover:bg-accent focus:bg-accent",
                   },
-                  [props.localeLabels[l] ?? l, l === current.value ? CheckIcon("size-4 text-brand") : null],
+                  [
+                    props.localeLabels[l] ?? l,
+                    l === current.value ? CheckIcon("size-4 text-brand") : null,
+                  ],
                 ),
               ),
             )
