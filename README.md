@@ -25,7 +25,12 @@ pnpm build       # tsc per package -> packages/*/dist
 pnpm typecheck
 ```
 
-The build uses `tsc` (no bundler) so the `"use client"` directive stays intact in every file.
+Builds use [tsup](https://tsup.egoist.dev) (esbuild): minified ESM with tree-shaking and code splitting, plus `tsc` for `.d.ts` files.
+
+- `@gaine/core`, `@gaine/vitepress`: one bundle per public entry point (shared code goes into chunks).
+- `@gaine/nextjs`: each file is minified but kept as its own module. A single bundle would drop the `"use client"` directives that Next.js needs.
+- `gaine` (CLI): a single minified `dist/cli.js`; `templates/` ships as plain files.
+- `pnpm verify:dist` checks that every `exports` target exists, `"use client"` survived and the CLI keeps its shebang. It runs inside `pnpm test`.
 
 ## Formatting and license headers
 

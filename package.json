@@ -10,9 +10,10 @@
     "clean": "pnpm -r clean",
     "format": "node scripts/format-sources.mjs",
     "format:check": "node scripts/format-sources.mjs --check",
-    "test": "pnpm build && pnpm -r --workspace-concurrency=1 test",
+    "test": "pnpm build && pnpm verify:dist && pnpm -r --workspace-concurrency=1 test",
     "pack:local": "node scripts/pack-tarballs.mjs",
-    "install:local": "node scripts/install-local.mjs"
+    "install:local": "node scripts/install-local.mjs",
+    "verify:dist": "node scripts/verify-dist.mjs"
   },
   "engines": {
     "node": ">=20.9.0"
@@ -20,6 +21,7 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "prettier": "^3.4.2",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.2",
+    "tsup": "^8.3.5"
   }
 }
