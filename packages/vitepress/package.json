@@ -1,6 +1,6 @@
 {
   "name": "@gaine/vitepress",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "VitePress (Vue 3) integration for Gaine, built on @gaine/core",
   "license": "Apache-2.0",
   "type": "module",
