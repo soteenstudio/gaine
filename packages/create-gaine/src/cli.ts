@@ -123,7 +123,6 @@ function copyDir(from: string, to: string, vars: Record<string, string>, written
   }
 }
 
-/** Fail loudly if a scaffold is unusable (missing manifest, unreplaced placeholders). */
 function assertScaffold(dir: string) {
   const manifest = join(dir, "package.json");
   if (!existsSync(manifest)) throw new Error("Template is missing package.json");
@@ -178,7 +177,6 @@ async function main() {
     copyDir(template, dir, { name }, written);
     assertScaffold(dir);
   } catch (err) {
-    // Do not leave a half-written project behind.
     for (const file of written) rmSync(file, { force: true });
     if (!existed) rmSync(dir, { recursive: true, force: true });
     throw err;

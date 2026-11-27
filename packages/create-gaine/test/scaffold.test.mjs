@@ -49,12 +49,12 @@ const combos = [
   ["vitepress", "js"],
 ];
 
-// Public subpath exports of the workspace packages, e.g. "@gaine/nextjs/proxy".
 function publicSpecifiers() {
   const out = new Set();
   for (const dir of ["core", "nextjs", "vitepress"]) {
     const pkg = readJson(join(PACKAGES, dir, "package.json"));
-    for (const key of Object.keys(pkg.exports)) out.add(key === "." ? pkg.name : pkg.name + key.slice(1));
+    for (const key of Object.keys(pkg.exports))
+      out.add(key === "." ? pkg.name : pkg.name + key.slice(1));
   }
   return out;
 }
@@ -77,7 +77,9 @@ for (const [framework, lang] of combos) {
     const pkg = readJson(join(dir, "package.json"));
     assert.equal(pkg.name, "demo-app");
     const versions = new Set(
-      ["core", "nextjs", "vitepress"].map((d) => readJson(join(PACKAGES, d, "package.json")).version),
+      ["core", "nextjs", "vitepress"].map(
+        (d) => readJson(join(PACKAGES, d, "package.json")).version,
+      ),
     );
     assert.equal(versions.size, 1, "workspace packages share one version");
     const [version] = versions;
@@ -91,7 +93,6 @@ for (const [framework, lang] of combos) {
       }
     }
 
-    // Framework versions the templates are written for.
     const deps = { ...pkg.dependencies, ...pkg.devDependencies };
     if (framework === "next") {
       assert.match(deps.next, /^\^16\./);
@@ -110,17 +111,17 @@ for (const [framework, lang] of combos) {
       assert.ok(deps["@types/node"], "@types/node is required for process.env in config files");
     }
 
-    // Every @gaine/* import must resolve to a real public export.
     const known = publicSpecifiers();
     for (const file of files.filter((f) => /\.(m?[jt]sx?)$/.test(f))) {
       const body = readFileSync(file, "utf8");
-      for (const m of body.matchAll(/from\s+["'](@gaine\/[^"']+)["']|import\s+["'](@gaine\/[^"']+)["']/g)) {
+      for (const m of body.matchAll(
+        /from\s+["'](@gaine\/[^"']+)["']|import\s+["'](@gaine\/[^"']+)["']/g,
+      )) {
         const spec = m[1] ?? m[2];
         assert.ok(known.has(spec), `${file}: "${spec}" is not an export of the workspace packages`);
       }
     }
 
-    // CSS: @import must precede every other rule, otherwise it is silently ignored.
     for (const file of files.filter((f) => f.endsWith(".css"))) {
       const css = readFileSync(file, "utf8").replace(/\/\*[\s\S]*?\*\//g, "");
       const firstRule = css.search(/^\s*(?!@import|@charset)[^\s]/m);
