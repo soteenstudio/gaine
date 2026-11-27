@@ -30,3 +30,8 @@ import { renderOgCover, renderOgFallback } from "@gaine/nextjs/og";
 - **UI & theme**: `Button`, `Badge`, `DropdownMenu*`, `SectionHeading`, `Logo`, `ThemeToggle`, `LanguageSwitcher`, plus `ThemeSync`, `ScrollReveal`, and `reveal()`.
 - **Routing & SEO**: `createLocaleProxy()` for `proxy.ts`, `createRobots()` / `createSitemap()` under `@gaine/nextjs/metadata`, and OG image helpers under `@gaine/nextjs/og`.
 - **Speed (`@gaine/nextjs/speed` & `/config`)**: `withGaineSpeed()` for `next.config` and zero-JS server components (`GaineRuntime`, `GaineHead`, `ThemeToggleLite`, `LanguageSwitcherLite`). Skip `ThemeSync` and `ScrollReveal` if `GaineRuntime` is mounted.
+## Styles
+
+`@gaine/nextjs` does not ship CSS. Install `@gaine/core` as a direct dependency of your app
+and import its styles (for example `@gaine/core/reveal.css` and `@gaine/core/speed.css`);
+with pnpm's strict `node_modules`, importing them without a direct dependency fails to resolve.

@@ -16,7 +16,7 @@
  */
 
 import { appendFileSync, readFileSync, readdirSync, writeFileSync, existsSync } from "node:fs";
-import { dirname, join, resolve } from "node:path";
+import { dirname, join, relative, resolve } from "node:path";
 import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
@@ -26,7 +26,10 @@ const SEMVER = /^(\d+)\.(\d+)\.(\d+)(?:-([0-9A-Za-z.-]+))?$/;
 
 const git = (...args) => execFileSync("git", args, { cwd: ROOT, encoding: "utf8" }).trim();
 const readJson = (file) => JSON.parse(readFileSync(file, "utf8"));
-const writeJson = (file, data) => writeFileSync(file, JSON.stringify(data, null, 2) + "\n");
+const writeJson = (file, data) => {
+  const eol = readFileSync(file, "utf8").includes("\r\n") ? "\r\n" : "\n";
+  writeFileSync(file, JSON.stringify(data, null, 2).replace(/\n/g, eol) + eol);
+};
 
 function publicPackages() {
   return readdirSync(PACKAGES_DIR, { withFileTypes: true })
@@ -130,6 +133,24 @@ function prepare(tag) {
     );
   }
 
+  const names = new Set(pkgs.map((p) => p.json.name));
+  const stale = [];
+  for (const file of templateManifests()) {
+    const json = readJson(file);
+    for (const field of ["dependencies", "devDependencies", "peerDependencies"]) {
+      for (const [dep, range] of Object.entries(json[field] ?? {})) {
+        if (names.has(dep) && range !== `^${version}`)
+          stale.push(`${relative(ROOT, file)}: ${dep}@${range} (expected ^${version})`);
+      }
+    }
+  }
+  if (stale.length) {
+    throw new Error(
+      `Template manifests are out of sync with ${tag}:\n  ${stale.join("\n  ")}\n` +
+        `Run \`node scripts/release.mjs bump ${version}\` or update them by hand.`,
+    );
+  }
+
   const slug = process.env.GITHUB_REPOSITORY;
   if (slug) {
     const url = `git+https://github.com/${slug}.git`;
@@ -146,6 +167,58 @@ function prepare(tag) {
   setOutput("dist_tag", distTag);
   setOutput("prerelease", pre ? "true" : "false");
   console.log(`version=${version} dist_tag=${distTag} prerelease=${Boolean(pre)}`);
+}
+
+function npm(...args) {
+  try {
+    return {
+      ok: true,
+      out: execFileSync("npm", args, {
+        cwd: ROOT,
+        encoding: "utf8",
+        stdio: ["ignore", "pipe", "pipe"],
+      }).trim(),
+    };
+  } catch (err) {
+    return { ok: false, out: `${err.stdout ?? ""}${err.stderr ?? ""}`.trim() };
+  }
+}
+
+function preflight(tag, flags) {
+  if (!tag?.startsWith("v"))
+    throw new Error("Usage: release.mjs preflight vX.Y.Z [--strict] [--dry-run]");
+  const version = tag.slice(1);
+  parse(version);
+  const strict = flags.includes("--strict");
+  const dry = flags.includes("--dry-run");
+  const problems = [];
+
+  if (!process.env.NODE_AUTH_TOKEN) {
+    (dry ? console.warn : (m) => problems.push(m))(
+      "NPM_TOKEN secret is empty or not exposed as NODE_AUTH_TOKEN",
+    );
+  } else {
+    const who = npm("whoami");
+    if (!who.ok) problems.push(`npm authentication failed: ${who.out.split("\n")[0]}`);
+    else console.log(`npm user: ${who.out}`);
+  }
+
+  for (const p of publicPackages()) {
+    if (p.json.version !== version) {
+      problems.push(`${p.json.name}@${p.json.version} does not match ${tag}`);
+      continue;
+    }
+    const res = npm("view", `${p.json.name}@${version}`, "version");
+    if (res.ok && res.out) {
+      const msg = `${p.json.name}@${version} is already published`;
+      if (strict) problems.push(msg);
+      else console.log(`notice: ${msg} (will be skipped by pnpm publish)`);
+    } else if (!res.ok && !/E404|404 Not Found/i.test(res.out)) {
+      problems.push(`could not query registry for ${p.json.name}: ${res.out.split("\n")[0]}`);
+    }
+  }
+  if (problems.length) throw new Error(`Preflight failed:\n  ${problems.join("\n  ")}`);
+  console.log(`preflight OK for ${tag}`);
 }
 
 const SECTIONS = [
@@ -302,6 +375,7 @@ const [cmd, ...rest] = process.argv.slice(2);
 try {
   if (cmd === "bump") console.log(bump(rest[0]));
   else if (cmd === "prepare") prepare(rest[0]);
+  else if (cmd === "preflight") preflight(rest[0], rest.slice(1));
   else if (cmd === "notes") {
     const opts = {};
     for (let i = 1; i < rest.length; i++) {
@@ -310,7 +384,7 @@ try {
     }
     process.stdout.write(notes(rest[0], opts));
   } else {
-    console.error("Usage: release.mjs <bump|prepare|notes> ...");
+    console.error("Usage: release.mjs <bump|prepare|preflight|notes> ...");
     process.exit(2);
   }
 } catch (err) {

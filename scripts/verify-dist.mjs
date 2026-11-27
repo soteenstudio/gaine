@@ -48,9 +48,27 @@ for (const name of ["core", "nextjs", "vitepress", "create-gaine"]) {
   const dir = join(ROOT, "packages", name);
   const pkg = JSON.parse(readFileSync(join(dir, "package.json"), "utf8"));
   const wanted = new Set([...targets(pkg.exports), ...targets(pkg.bin)]);
+  const files = (pkg.files ?? []).map((f) => f.replace(/^\.\//, "").replace(/\/$/, ""));
+  const covered = (rel) => {
+    const r = rel.replace(/^\.\//, "");
+    return files.some((f) => r === f || r.startsWith(`${f}/`));
+  };
   for (const rel of wanted) {
     if (rel.endsWith("package.json")) continue;
-    if (!existsSync(join(dir, rel))) fail(`${pkg.name}: missing ${rel}`);
+    const abs = join(dir, rel);
+    if (!existsSync(abs)) {
+      fail(`${pkg.name}: missing ${rel}`);
+      continue;
+    }
+    if (!covered(rel))
+      fail(`${pkg.name}: ${rel} is exported but not covered by "files" (not published)`);
+    if (
+      rel.endsWith(".css") &&
+      !readFileSync(abs, "utf8")
+        .replace(/\/\*[\s\S]*?\*\//g, "")
+        .trim()
+    )
+      fail(`${pkg.name}: ${rel} is empty`);
   }
 }
 
@@ -63,18 +81,25 @@ const client = [
 ];
 for (const f of client) {
   const file = join(ROOT, "packages/nextjs/dist", `${f}.js`);
-  if (!existsSync(file)) continue;
+  if (!existsSync(file)) {
+    fail(`@gaine/nextjs: dist/${f}.js is missing`);
+    continue;
+  }
   if (!/^["']use client["']/.test(readFileSync(file, "utf8").trimStart()))
     fail(`@gaine/nextjs: "use client" lost in dist/${f}.js`);
 }
 
 const cli = join(ROOT, "packages/create-gaine/dist/cli.js");
-if (existsSync(cli) && !readFileSync(cli, "utf8").startsWith("#!/usr/bin/env node"))
+if (!existsSync(cli)) fail("create-gaine: dist/cli.js is missing");
+else if (!readFileSync(cli, "utf8").startsWith("#!/usr/bin/env node"))
   fail("create-gaine: shebang missing in dist/cli.js");
 
 for (const name of ["core", "nextjs", "vitepress", "create-gaine"]) {
   const dist = join(ROOT, "packages", name, "dist");
-  if (!existsSync(dist)) continue;
+  if (!existsSync(dist)) {
+    fail(`${name}: dist/ is missing (run pnpm build first)`);
+    continue;
+  }
   for (const file of walk(dist).filter((f) => f.endsWith(".js"))) {
     if (looksUnminified(readFileSync(file, "utf8")))
       fail(`${name}: looks unminified: ${file.slice(ROOT.length + 1)}`);
