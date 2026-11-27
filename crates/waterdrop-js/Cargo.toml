@@ -1,0 +1,17 @@
+[package]
+name = "waterdrop-js"
+description = "JavaScript lexer, safe minifier, module scanner and dead-code analysis for Waterdrop"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+homepage.workspace = true
+
+[lib]
+name = "waterdrop_js"
+path = "src/lib.rs"
+
+[dependencies]
+waterdrop-core.workspace = true

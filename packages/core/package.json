@@ -9,7 +9,8 @@
   ],
   "files": [
     "dist",
-    "styles"
+    "styles",
+    "bin"
   ],
   "exports": {
     ".": {
@@ -32,6 +33,11 @@
       "types": "./dist/speed/node.d.ts",
       "import": "./dist/speed/node.js",
       "default": "./dist/speed/node.js"
+    },
+    "./waterdrop": {
+      "types": "./dist/waterdrop/index.d.ts",
+      "import": "./dist/waterdrop/index.js",
+      "default": "./dist/waterdrop/index.js"
     },
     "./speed.css": "./styles/speed.css",
     "./view-transition.css": "./styles/view-transition.css",

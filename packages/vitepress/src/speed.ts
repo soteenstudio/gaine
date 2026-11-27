@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { existsSync } from "node:fs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import type { HeadConfig, SiteConfig, UserConfig } from "vitepress";
@@ -29,6 +30,8 @@ import {
   type RuntimeOptions,
   type SpeculationOptions,
 } from "@gaine/core/speed";
+import { runWaterdrop } from "@gaine/core/waterdrop";
+import type { WaterdropBuildOptions } from "@gaine/core/waterdrop";
 
 export interface GaineVitepressSpeedOptions {
   mode?: "spa" | "mpa";
@@ -42,6 +45,7 @@ export interface GaineVitepressSpeedOptions {
   headersFile?: boolean;
   immutable?: readonly string[];
   security?: boolean;
+  waterdrop?: boolean | WaterdropBuildOptions;
 }
 
 const MODERN_TARGET = ["es2022", "chrome100", "firefox100", "safari15.4"];
@@ -83,6 +87,31 @@ export function withGaineSpeed<C extends UserConfig<any>>(
 
   const buildEnd = async (siteConfig: SiteConfig) => {
     await config.buildEnd?.(siteConfig);
+    const waterdropEnabled = options.waterdrop !== false;
+    const waterdropOptions = typeof options.waterdrop === "object" ? options.waterdrop : {};
+    if (waterdropEnabled && existsSync(siteConfig.outDir)) {
+      const failOnBudget = waterdropOptions.failOnBudget ?? true;
+      const result = await runWaterdrop({
+        ...waterdropOptions,
+        root: siteConfig.outDir,
+        outDir: siteConfig.outDir,
+        mode: "build",
+        base,
+        report: waterdropOptions.report ?? {
+          path: join(siteConfig.outDir, "waterdrop-report.json"),
+        },
+      });
+      if (!waterdropOptions.quiet) {
+        console.log(
+          `Waterdrop optimized ${result.report.summary.assets} assets in ${siteConfig.outDir}`,
+        );
+      }
+      if (!result.report.budgetOk && failOnBudget) {
+        throw new Error(
+          `Waterdrop performance budget exceeded:\n${result.report.budgetFailures.join("\n")}`,
+        );
+      }
+    }
     if (options.headersFile === false) return;
     const rules = speedHeaders({ base, immutable, security: options.security ?? false });
     if (!rules.length) return;

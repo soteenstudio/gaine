@@ -1,0 +1,19 @@
+[package]
+name = "waterdrop-html"
+description = "Streaming HTML scanner, asset extractor and safe optimizer for Waterdrop"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+homepage.workspace = true
+
+[lib]
+name = "waterdrop_html"
+path = "src/lib.rs"
+
+[dependencies]
+waterdrop-core.workspace = true
+waterdrop-js.workspace = true
+waterdrop-css.workspace = true

@@ -1,0 +1,23 @@
+[package]
+name = "waterdrop"
+description = "Waterdrop: the performance engine and runtime behind Gaine"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+homepage.workspace = true
+
+[lib]
+name = "waterdrop"
+path = "src/lib.rs"
+
+[dependencies]
+waterdrop-core.workspace = true
+waterdrop-html.workspace = true
+waterdrop-js.workspace = true
+waterdrop-css.workspace = true
+waterdrop-graph.workspace = true
+waterdrop-report.workspace = true
+waterdrop-engine.workspace = true

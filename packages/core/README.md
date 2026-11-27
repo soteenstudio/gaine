@@ -25,6 +25,7 @@ import "@gaine/core/reveal.css";
 - **Locale & class helpers**: `defineLocales`, `detectLocale`, and `cn`.
 - **Tailwind preset**: `gainePreset()` and `gaineContent` from `@gaine/core/tailwind` (optional `tailwindcss` ^3.4.17 peer dep).
 - **Speed (`@gaine/core/speed`)**: Shared performance and header helpers, Node build checks under `@gaine/core/speed/node` (`measureBuild`, `checkBudget`), and optional stylesheets (`speed.css`, `view-transition.css`).
+- **Waterdrop (`@gaine/core/waterdrop`)**: Run the Rust Waterdrop engine from Node. It uses the native `waterdrop` binary when available and falls back to a pure-JavaScript engine otherwise.
 
 UI components live in the framework packages (`@gaine/nextjs` and `@gaine/vitepress`). Check the root README for full usage details.
 

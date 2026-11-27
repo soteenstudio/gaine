@@ -6,3 +6,5 @@ dist
 test-speed
 test-speed2
 zip.js
+target
+packages/core/bin

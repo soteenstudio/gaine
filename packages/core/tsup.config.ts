@@ -22,6 +22,7 @@ export default defineConfig({
     "tailwind/index": "src/tailwind/index.ts",
     "speed/index": "src/speed/index.ts",
     "speed/node": "src/speed/node.ts",
+    "waterdrop/index": "src/waterdrop/index.ts",
   },
   format: ["esm"],
   target: "es2020",

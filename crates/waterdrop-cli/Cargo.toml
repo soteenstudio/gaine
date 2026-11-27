@@ -1,0 +1,19 @@
+[package]
+name = "waterdrop-cli"
+description = "Command line interface for the Waterdrop build optimizer"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+homepage.workspace = true
+
+[[bin]]
+name = "waterdrop"
+path = "src/main.rs"
+
+[dependencies]
+waterdrop-core.workspace = true
+waterdrop-engine.workspace = true
+waterdrop-report.workspace = true

@@ -1,0 +1,38 @@
+[workspace]
+resolver = "2"
+members = [
+  "crates/waterdrop",
+  "crates/waterdrop-core",
+  "crates/waterdrop-html",
+  "crates/waterdrop-js",
+  "crates/waterdrop-css",
+  "crates/waterdrop-graph",
+  "crates/waterdrop-report",
+  "crates/waterdrop-engine",
+  "crates/waterdrop-cli",
+]
+
+[workspace.package]
+version = "0.1.2"
+edition = "2021"
+rust-version = "1.74"
+license = "Apache-2.0"
+authors = ["SoTeen Studio"]
+repository = "https://github.com/soteenstudio/gaine"
+homepage = "https://gaine.soteenstudio.my.id"
+
+[workspace.dependencies]
+waterdrop-core = { path = "crates/waterdrop-core", version = "0.1.2" }
+waterdrop-html = { path = "crates/waterdrop-html", version = "0.1.2" }
+waterdrop-js = { path = "crates/waterdrop-js", version = "0.1.2" }
+waterdrop-css = { path = "crates/waterdrop-css", version = "0.1.2" }
+waterdrop-graph = { path = "crates/waterdrop-graph", version = "0.1.2" }
+waterdrop-report = { path = "crates/waterdrop-report", version = "0.1.2" }
+waterdrop-engine = { path = "crates/waterdrop-engine", version = "0.1.2" }
+
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = 3
+panic = "abort"
+strip = true

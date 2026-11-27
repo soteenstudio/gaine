@@ -48,7 +48,15 @@ const CODE_EXT = new Set([".ts", ".tsx", ".mts", ".cts", ".js", ".jsx", ".mjs", 
 const CSS_EXT = new Set([".css"]);
 const JSON_EXT = new Set([".json"]);
 
-const IGNORED_DIRS = new Set(["node_modules", "dist", ".next", ".git", "coverage", "cache"]);
+const IGNORED_DIRS = new Set([
+  "node_modules",
+  "dist",
+  ".next",
+  ".git",
+  "coverage",
+  "cache",
+  "target",
+]);
 const TEMPLATES_DIR = join(ROOT, "packages", "create-gaine", "templates");
 
 const KEEP_PATTERNS = [

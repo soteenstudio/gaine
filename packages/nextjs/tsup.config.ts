@@ -60,6 +60,7 @@ export default defineConfig([
       og: "src/og.tsx",
       config: "src/config.ts",
       speed: "src/speed.tsx",
+      "waterdrop-adapter": "src/waterdrop-adapter.ts",
     },
     esbuildPlugins: [keepClientExternal],
   },

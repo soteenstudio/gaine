@@ -1,0 +1,22 @@
+[package]
+name = "waterdrop-engine"
+description = "Waterdrop pipeline that unifies HTML, JavaScript, CSS and asset graph optimizations"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+homepage.workspace = true
+
+[lib]
+name = "waterdrop_engine"
+path = "src/lib.rs"
+
+[dependencies]
+waterdrop-core.workspace = true
+waterdrop-html.workspace = true
+waterdrop-js.workspace = true
+waterdrop-css.workspace = true
+waterdrop-graph.workspace = true
+waterdrop-report.workspace = true

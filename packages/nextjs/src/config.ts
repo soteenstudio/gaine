@@ -15,7 +15,11 @@
  */
 
 import type { NextConfig } from "next";
+import { fileURLToPath } from "node:url";
 import { speedHeaders, toNextHeaders, type ResourceHint } from "@gaine/core/speed";
+import type { WaterdropBuildOptions } from "@gaine/core/waterdrop";
+
+export type GaineNextWaterdropOptions = WaterdropBuildOptions;
 
 export interface GaineNextSpeedOptions {
   inlineCss?: boolean;
@@ -27,6 +31,7 @@ export interface GaineNextSpeedOptions {
   immutable?: readonly string[];
   preload?: readonly ResourceHint[];
   security?: boolean;
+  waterdrop?: boolean | GaineNextWaterdropOptions;
 }
 
 const GAINE_PACKAGES = ["@gaine/core", "@gaine/nextjs"];
@@ -72,6 +77,12 @@ export function withGaineSpeed(
   );
   if (rules.length) {
     next.headers = async () => [...rules, ...((await config.headers?.()) ?? [])];
+  }
+  const waterdropEnabled = options.waterdrop !== false;
+  const waterdropOptions = typeof options.waterdrop === "object" ? options.waterdrop : {};
+  if (waterdropEnabled) {
+    process.env.GAINE_WATERDROP_OPTIONS = JSON.stringify(waterdropOptions);
+    next.adapterPath = fileURLToPath(new URL("./waterdrop-adapter.js", import.meta.url));
   }
   return next as NextConfig;
 }
