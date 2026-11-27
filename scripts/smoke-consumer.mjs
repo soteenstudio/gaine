@@ -22,6 +22,7 @@ import {
   readFileSync,
   readdirSync,
   rmSync,
+  statSync,
   writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
@@ -135,7 +136,10 @@ try {
       `${p.json.name.replace("@", "").replace("/", "-")}-${p.json.version}.tgz`,
     );
     if (!existsSync(file)) fail(`tarball not found for ${p.json.name}: ${file}`);
-    else tarballs[p.json.name] = file;
+    else {
+      tarballs[p.json.name] = file;
+      console.log(`  packed ${p.json.name}: ${(statSync(file).size / 1024).toFixed(1)} KiB`);
+    }
   }
   if (errors.length) throw new Error("packing failed");
 
@@ -233,6 +237,20 @@ if (kind === "css") {
       if (errors.length === before)
         console.log(`  ok ${specifier}${kind === "resolve" ? " (static)" : ""}`);
     }
+  }
+
+  const walkAll = (dir) =>
+    readdirSync(dir, { withFileTypes: true }).flatMap((e) =>
+      e.isDirectory()
+        ? e.name === "node_modules"
+          ? []
+          : walkAll(join(dir, e.name))
+        : [join(dir, e.name)],
+    );
+  for (const p of pkgs) {
+    const dir = join(app, "node_modules", p.json.name);
+    for (const f of walkAll(dir).filter((f) => f.endsWith(".map")))
+      fail(`${p.json.name}: published tarball contains ${relative(dir, f)}`);
   }
 
   const cli = join(app, "node_modules", "create-gaine", "dist", "cli.js");

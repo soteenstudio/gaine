@@ -14,15 +14,59 @@
  * limitations under the License.
  */
 
-import { defineConfig } from "tsup";
+import { relative, resolve } from "node:path";
+import { defineConfig, type Options } from "tsup";
 
-export default defineConfig({
-  entry: ["src/**/*.{ts,tsx}"],
-  bundle: false,
+const CLIENT = [
+  "theme-sync",
+  "scroll-reveal",
+  "language-switcher",
+  "ui/dropdown-menu",
+  "ui/theme-toggle",
+];
+const SRC = resolve(process.cwd(), "src");
+
+const keepClientExternal = {
+  name: "keep-client-external",
+  setup(build: { onResolve: (o: { filter: RegExp }, cb: (a: any) => any) => void }) {
+    build.onResolve({ filter: /^\.\.?\// }, (args) => {
+      if (args.kind === "entry-point") return undefined;
+      const rel = relative(SRC, resolve(args.resolveDir, args.path))
+        .replace(/\\/g, "/")
+        .replace(/\.(?:[mc]?js|tsx?)$/, "");
+      return CLIENT.includes(rel) ? { path: `./${rel}.js`, external: true } : undefined;
+    });
+  },
+};
+
+const common: Options = {
   format: ["esm"],
   target: "es2020",
+  bundle: true,
+  splitting: false,
+  treeshake: true,
   minify: true,
-  sourcemap: true,
-  clean: true,
+  sourcemap: false,
+  clean: false,
   dts: false,
-});
+};
+
+export default defineConfig([
+  {
+    ...common,
+    entry: {
+      index: "src/index.ts",
+      proxy: "src/proxy.ts",
+      metadata: "src/metadata.ts",
+      og: "src/og.tsx",
+      config: "src/config.ts",
+      speed: "src/speed.tsx",
+    },
+    esbuildPlugins: [keepClientExternal],
+  },
+  {
+    ...common,
+    entry: Object.fromEntries(CLIENT.map((name) => [name, `src/${name}.tsx`])),
+    banner: { js: '"use client";' },
+  },
+]);
