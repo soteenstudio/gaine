@@ -15,7 +15,8 @@
     "pack:local": "node scripts/pack-tarballs.mjs",
     "install:local": "node scripts/install-local.mjs",
     "verify:dist": "node scripts/verify-dist.mjs",
-    "smoke:consumer": "node scripts/smoke-consumer.mjs"
+    "smoke:consumer": "node scripts/smoke-consumer.mjs",
+    "bench": "node bench/run.mjs"
   },
   "engines": {
     "node": ">=20.9.0"

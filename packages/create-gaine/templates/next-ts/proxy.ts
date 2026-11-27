@@ -19,4 +19,9 @@ import { defaultLocale, locales } from "@/i18n/config";
 
 export default createLocaleProxy({ locales, defaultLocale });
 
-export const config = { matcher: ["/((?!_next|api|.*\\..*).*)"] };
+// Skip the proxy entirely for URLs that already carry a locale (`/id`, `/en/...`): no
+// middleware hop on the hot path, so those requests go straight to the prerendered page.
+// Keep this list in sync with `locales` in i18n/config (the proxy itself stays correct either way).
+export const config = {
+  matcher: ["/((?!_next|api|id/|id$|en/|en$|.*\\..*).*)"],
+};

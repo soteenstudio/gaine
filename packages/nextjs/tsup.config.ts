@@ -55,6 +55,7 @@ export default defineConfig([
     ...common,
     entry: {
       index: "src/index.ts",
+      ui: "src/ui.ts",
       proxy: "src/proxy.ts",
       metadata: "src/metadata.ts",
       og: "src/og.tsx",

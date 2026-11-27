@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 0 0% 100%;
+  --foreground: 224 71% 4%;
+  --border: 220 13% 91%;
+  --muted: 220 14% 96%;
+  --muted-foreground: 220 9% 46%;
+  --brand: 221 83% 53%;
+  --brand-foreground: 0 0% 100%;
+}
+.dark {
+  --background: 224 71% 4%;
+  --foreground: 210 20% 98%;
+  --border: 215 28% 17%;
+  --muted: 215 28% 17%;
+  --muted-foreground: 217 11% 65%;
+}
+@layer base {
+  * { @apply border-border; }
+  body { @apply bg-background text-foreground antialiased; }
+}
+.reveal { opacity: 0; transform: translateY(16px); transition: opacity .5s ease, transform .5s ease; }
+.reveal.in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }

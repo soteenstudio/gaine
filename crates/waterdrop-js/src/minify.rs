@@ -112,10 +112,36 @@ pub fn is_minified(source: &str) -> bool {
     average > 180 || (lines * 120 < len && !source.contains("\n    "))
 }
 
+/// Decides whether the line break that sat before `curr` in the source must be
+/// kept. Dropping it is only safe when `curr` cannot start a new statement
+/// (it can only continue the previous expression) or when `prev` cannot end a
+/// statement. Anything else relies on automatic semicolon insertion, so the
+/// break is preserved: `foo()\nconst R = 1` must never become `foo()const R=1`.
 fn needs_newline(prev: &Token, curr: &Token, source: &str) -> bool {
     let prev_text = prev.text(source);
     let curr_text = curr.text(source);
-    if matches!(curr_text, ")" | "]" | "}" | ";" | "," | "." | "?." | ":") {
+    // Tokens that can only continue the previous expression (no ASI happens
+    // before them). `!`, `~` and `{` are deliberately NOT here: they can begin
+    // a new statement, so `a\n!b` and `f()\n{...}` depend on the line break.
+    if matches!(
+        curr_text,
+        ")" | "]"
+            | "}"
+            | ";"
+            | ","
+            | "."
+            | "?."
+            | ":"
+            | "?"
+            | "&&"
+            | "||"
+            | "??"
+            | "+"
+            | "-"
+            | "*"
+            | "/"
+            | "%"
+    ) {
         return false;
     }
     if matches!(prev_text, "(" | "[" | "{" | "," | ";" | ":" | "=>" | "=") {
@@ -124,13 +150,14 @@ fn needs_newline(prev: &Token, curr: &Token, source: &str) -> bool {
     if matches!(curr_text, "++" | "--") {
         return !matches!(prev_text, ";" | "{" | "}" | "(" | "[" | ",");
     }
-    if matches!(prev.kind, TokenKind::Punct) {
+    // A punctuator can only end a statement if it closes something (`)`, `]`,
+    // `}`) or is a postfix operator. After those, the next line may be a new
+    // statement and needs its line break. After any other punctuator
+    // (binary operators, `!`, `.`, ...) the expression is still open.
+    if prev.kind == TokenKind::Punct && !matches!(prev_text, ")" | "]" | "}" | "++" | "--") {
         return false;
     }
-    !matches!(
-        curr_text,
-        "{" | "!" | "~" | "?" | "&&" | "||" | "??" | "+" | "-" | "*" | "/" | "%"
-    )
+    true
 }
 
 fn needs_space(prev: &Token, curr: &Token, source: &str) -> bool {
@@ -191,6 +218,30 @@ mod tests {
         assert!(out.contains("a\n++b"), "{out}");
         let out = min("const x = a\n  + b");
         assert_eq!(out, "const x=a+b");
+    }
+
+    #[test]
+    fn keeps_line_break_after_closing_punctuation() {
+        // The bug behind `SyntaxError: Unexpected identifier 'R'`.
+        assert_eq!(min("foo()\nconst R = 1"), "foo()\nconst R=1");
+        assert_eq!(min("const f = () => {}\nconst R = 1"), "const f=()=>{}\nconst R=1");
+        assert_eq!(min("const a = [1]\nR.run()"), "const a=[1]\nR.run()");
+        assert_eq!(min("x++\nR.run()"), "x++\nR.run()");
+        assert_eq!(min("a()\nlet b = 2"), "a()\nlet b=2");
+    }
+
+    #[test]
+    fn keeps_line_break_before_statement_starting_punctuation() {
+        assert_eq!(min("a\n!b"), "a\n!b");
+        assert_eq!(min("a\n~b"), "a\n~b");
+        assert_eq!(min("f()\n{ g() }"), "f()\n{g()}");
+    }
+
+    #[test]
+    fn still_joins_continuations() {
+        assert_eq!(min("a\n  .b()\n  .c()"), "a.b().c()");
+        assert_eq!(min("const x = a\n  && b"), "const x=a&&b");
+        assert_eq!(min("foo(\n  a,\n  b\n)"), "foo(a,b)");
     }
 
     #[test]

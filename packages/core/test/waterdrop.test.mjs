@@ -93,3 +93,28 @@ test("waterdrop falls back to the JavaScript engine", async () => {
     await rm(dir, { recursive: true, force: true });
   }
 });
+
+test("exclude accepts path prefixes in the JS engine (parity with native)", async () => {
+  const dir = await mkdtemp(join(tmpdir(), "gaine-waterdrop-"));
+  const previous = process.env.GAINE_WATERDROP_BIN;
+  process.env.GAINE_WATERDROP_BIN = "/definitely/missing/waterdrop";
+  try {
+    await mkdir(join(dir, "server", "chunks"), { recursive: true });
+    await mkdir(join(dir, "static", "chunks"), { recursive: true });
+    await writeFile(join(dir, "index.html"), `<script src="/static/chunks/a.js"></script>`);
+    await writeFile(join(dir, "static", "chunks", "a.js"), "// c\nvar a = 1;\n");
+    await writeFile(join(dir, "server", "chunks", "s.js"), "// c\nvar s = 1;\n");
+    await runWaterdrop({
+      root: dir,
+      outDir: dir,
+      exclude: ["server/chunks"],
+      js: { minify: "always" },
+    });
+    assert.ok(!(await readFile(join(dir, "static", "chunks", "a.js"), "utf8")).includes("// c"));
+    assert.ok((await readFile(join(dir, "server", "chunks", "s.js"), "utf8")).includes("// c"));
+  } finally {
+    if (previous === undefined) delete process.env.GAINE_WATERDROP_BIN;
+    else process.env.GAINE_WATERDROP_BIN = previous;
+    await rm(dir, { recursive: true, force: true });
+  }
+});

@@ -789,12 +789,20 @@ export async function runFallback(options: WaterdropOptions): Promise<WaterdropR
   };
 }
 
-async function walk(dir: string, exclude: Set<string>): Promise<string[]> {
+// Same rule as the native engine: an exclude entry matches a file/dir name anywhere
+// ("node_modules") or a path prefix relative to the walked root ("server/chunks").
+async function walk(
+  dir: string,
+  exclude: Set<string>,
+  root = dir,
+  rel = "",
+): Promise<string[]> {
   const out: string[] = [];
   for (const entry of await readdir(dir, { withFileTypes: true })) {
-    if (exclude.has(entry.name)) continue;
+    const path = rel ? `${rel}/${entry.name}` : entry.name;
+    if (exclude.has(entry.name) || exclude.has(path)) continue;
     const full = join(dir, entry.name);
-    if (entry.isDirectory()) out.push(...(await walk(full, exclude)));
+    if (entry.isDirectory()) out.push(...(await walk(full, exclude, root, path)));
     else if (entry.isFile()) out.push(full);
   }
   return out;

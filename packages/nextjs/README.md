@@ -27,6 +27,7 @@ import { renderOgCover, renderOgFallback } from "@gaine/nextjs/og";
 
 ## What is inside
 
+- **Server-only UI (`@gaine/nextjs/ui`)**: `Button`, `Badge`, `Logo`, `SectionHeading`, `reveal()` with no client modules in the graph, so importing them adds no client JS. Prefer this over the barrel on pages that don't need `DropdownMenu`, `ThemeToggle`, `LanguageSwitcher`, `ThemeSync` or `ScrollReveal`.
 - **UI & theme**: `Button`, `Badge`, `DropdownMenu*`, `SectionHeading`, `Logo`, `ThemeToggle`, `LanguageSwitcher`, plus `ThemeSync`, `ScrollReveal`, and `reveal()`.
 - **Routing & SEO**: `createLocaleProxy()` for `proxy.ts`, `createRobots()` / `createSitemap()` under `@gaine/nextjs/metadata`, and OG image helpers under `@gaine/nextjs/og`.
 - **Speed (`@gaine/nextjs/speed` & `/config`)**: `withGaineSpeed()` for `next.config` and zero-JS server components (`GaineRuntime`, `GaineHead`, `ThemeToggleLite`, `LanguageSwitcherLite`). Skip `ThemeSync` and `ScrollReveal` if `GaineRuntime` is mounted.

@@ -15,7 +15,7 @@
  */
 
 import { notFound } from "next/navigation";
-import { Badge, Button, Logo, SectionHeading, reveal } from "@gaine/nextjs";
+import { Badge, Button, Logo, SectionHeading, reveal } from "@gaine/nextjs/ui";
 import { LanguageSwitcherLite, ThemeToggleLite } from "@gaine/nextjs/speed";
 import { isLocale, localeLabels, locales } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";

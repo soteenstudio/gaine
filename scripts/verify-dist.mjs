@@ -99,6 +99,15 @@ if (existsSync(barrel)) {
       );
 }
 
+const uiEntry = join(ROOT, "packages/nextjs/dist/ui.js");
+if (!existsSync(uiEntry)) fail("@gaine/nextjs: dist/ui.js is missing");
+else {
+  const text = readFileSync(uiEntry, "utf8");
+  for (const f of client)
+    if (text.includes(`./${f}.js`))
+      fail(`@gaine/nextjs: dist/ui.js must stay server-only but references ./${f}.js`);
+}
+
 const cli = join(ROOT, "packages/create-gaine/dist/cli.js");
 if (!existsSync(cli)) fail("create-gaine: dist/cli.js is missing");
 else if (!readFileSync(cli, "utf8").startsWith("#!/usr/bin/env node"))

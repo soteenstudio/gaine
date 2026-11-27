@@ -26,6 +26,21 @@ interface BuildContext {
   };
 }
 
+// Waterdrop only needs what reaches the browser: prerendered HTML and .next/static. Server
+// bundles and the build cache are never served to clients, so skipping them keeps the pass
+// fast and means optimized output can never alter code that runs on the server.
+const DEFAULT_EXCLUDE = [
+  "node_modules",
+  ".git",
+  ".turbo",
+  ".cache",
+  "coverage",
+  "cache",
+  "diagnostics",
+  "server/chunks",
+  "server/edge",
+];
+
 export default {
   name: "gaine-waterdrop",
   async onBuildComplete(ctx: BuildContext) {
@@ -38,6 +53,7 @@ export default {
     const failOnBudget = options.failOnBudget ?? true;
     const result = await runWaterdrop({
       ...options,
+      exclude: exportMode ? options.exclude : (options.exclude ?? DEFAULT_EXCLUDE),
       root: ctx.projectDir,
       outDir,
       mode: "build",

@@ -1,0 +1,14 @@
+{
+  "name": "gaine-bench",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Auto-compare speed: plain Next.js vs Next.js + Gaine",
+  "scripts": {
+    "bench": "node run.mjs",
+    "setup": "playwright install chromium",
+    "test": "node --test test/*.test.mjs"
+  },
+  "dependencies": { "playwright": "^1.49.0" },
+  "engines": { "node": ">=20.9.0" }
+}
