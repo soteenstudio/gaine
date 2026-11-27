@@ -44,7 +44,6 @@ const common: Options = {
   target: "es2020",
   bundle: true,
   splitting: false,
-  treeshake: true,
   minify: true,
   sourcemap: false,
   clean: false,
