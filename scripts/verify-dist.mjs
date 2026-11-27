@@ -89,6 +89,16 @@ for (const f of client) {
     fail(`@gaine/nextjs: "use client" lost in dist/${f}.js`);
 }
 
+const barrel = join(ROOT, "packages/nextjs/dist/index.js");
+if (existsSync(barrel)) {
+  const text = readFileSync(barrel, "utf8");
+  for (const f of client)
+    if (!text.includes(`./${f}.js`))
+      fail(
+        `@gaine/nextjs: dist/index.js does not import ./${f}.js (client component inlined into the barrel?)`,
+      );
+}
+
 const cli = join(ROOT, "packages/create-gaine/dist/cli.js");
 if (!existsSync(cli)) fail("create-gaine: dist/cli.js is missing");
 else if (!readFileSync(cli, "utf8").startsWith("#!/usr/bin/env node"))
@@ -100,7 +110,11 @@ for (const name of ["core", "nextjs", "vitepress", "create-gaine"]) {
     fail(`${name}: dist/ is missing (run pnpm build first)`);
     continue;
   }
+  for (const file of walk(dist).filter((f) => f.endsWith(".map")))
+    fail(`${name}: source map must not be published: ${file.slice(ROOT.length + 1)}`);
   for (const file of walk(dist).filter((f) => f.endsWith(".js"))) {
+    if (/^\/\/# sourceMappingURL=/m.test(readFileSync(file, "utf8")))
+      fail(`${name}: sourceMappingURL left in ${file.slice(ROOT.length + 1)}`);
     if (looksUnminified(readFileSync(file, "utf8")))
       fail(`${name}: looks unminified: ${file.slice(ROOT.length + 1)}`);
   }
