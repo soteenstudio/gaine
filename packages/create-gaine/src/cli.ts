@@ -23,6 +23,7 @@ import {
   statSync,
   writeFileSync,
   copyFileSync,
+  rmSync,
 } from "node:fs";
 import { basename, join, relative, resolve } from "node:path";
 import { argv, cwd, exit, stdin, env } from "node:process";
@@ -69,7 +70,11 @@ function parseArgs(args: string[]) {
   for (let i = 0; i < args.length; i++) {
     const a = args[i]!;
     const [flag, inline] = a.startsWith("--") ? a.split("=", 2) : [a, undefined];
-    const value = () => inline ?? args[++i];
+    const value = () => {
+      const v = inline ?? args[++i];
+      if (v === undefined || v.startsWith("-")) fail(`Option ${flag} requires a value.`);
+      return v;
+    };
     if (a === "-h" || a === "--help") out.help = true;
     else if (a === "-v" || a === "--version") out.version = true;
     else if (flag === "-f" || flag === "--framework") out.framework = value();
@@ -92,6 +97,8 @@ const validateName = (v: string) =>
     ? undefined
     : "Name must be lowercase letters, digits, or - . _ (a valid npm package name).";
 
+const TEXT_FILE_RE = /\.(json|md|ts|tsx|js|jsx|mjs|cjs|mts|cts|css|vue|html|ya?ml|txt)$/;
+
 function isEmptyDir(dir: string) {
   return !existsSync(dir) || readdirSync(dir).every((f) => f === ".git");
 }
@@ -105,7 +112,7 @@ function copyDir(from: string, to: string, vars: Record<string, string>, written
       copyDir(src, dest, vars, written);
       continue;
     }
-    if (/\.(json|md|ts|tsx|js|jsx|mjs|mts|css|vue)$/.test(entry)) {
+    if (TEXT_FILE_RE.test(entry)) {
       let body = readFileSync(src, "utf8");
       for (const [k, v] of Object.entries(vars)) body = body.replaceAll(`{{${k}}}`, v);
       writeFileSync(dest, body);
@@ -114,6 +121,15 @@ function copyDir(from: string, to: string, vars: Record<string, string>, written
     }
     written.push(dest);
   }
+}
+
+/** Fail loudly if a scaffold is unusable (missing manifest, unreplaced placeholders). */
+function assertScaffold(dir: string) {
+  const manifest = join(dir, "package.json");
+  if (!existsSync(manifest)) throw new Error("Template is missing package.json");
+  const raw = readFileSync(manifest, "utf8");
+  if (raw.includes("{{")) throw new Error("package.json still contains template placeholders");
+  JSON.parse(raw);
 }
 
 function packageManager() {
@@ -157,7 +173,16 @@ async function main() {
   if (!existsSync(template)) fail(`Template not found: ${framework}-${lang}`);
 
   const written: string[] = [];
-  copyDir(template, dir, { name }, written);
+  const existed = existsSync(dir);
+  try {
+    copyDir(template, dir, { name }, written);
+    assertScaffold(dir);
+  } catch (err) {
+    // Do not leave a half-written project behind.
+    for (const file of written) rmSync(file, { force: true });
+    if (!existed) rmSync(dir, { recursive: true, force: true });
+    throw err;
+  }
 
   const pm = packageManager();
   const rel = relative(cwd(), dir);
