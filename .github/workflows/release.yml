@@ -70,6 +70,11 @@ jobs:
         if: github.event_name == 'push'
         run: echo "TAG=${{ github.ref_name }}" >> "$GITHUB_ENV"
 
+      - name: Preflight npm (auth, unpublished versions)
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: node scripts/release.mjs preflight "$TAG" ${{ github.event_name == 'workflow_dispatch' && '--strict' || '' }} ${{ inputs.dry_run == true && '--dry-run' || '' }}
+
       - name: Format check, typecheck, build and test
         run: |
           pnpm format:check
@@ -82,6 +87,9 @@ jobs:
 
       - name: Generate release notes
         run: node scripts/release.mjs notes "$TAG" --repo "$GITHUB_REPOSITORY" > RELEASE_NOTES.md
+
+      - name: Smoke-test packed tarballs in an isolated consumer
+        run: pnpm smoke:consumer
 
       - name: Publish to npm
         env:
